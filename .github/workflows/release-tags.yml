@@ -36,5 +36,5 @@ jobs:
           for TAG in ${TAGS};do
               echo "Creating and pushing ${TAG}"
               git tag -f ${TAG} ${ORIGINAL_TAG}
-              git push -f origin v${TAG}
+              git push -f origin ${TAG}
           done

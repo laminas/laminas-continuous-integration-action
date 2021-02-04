@@ -8,9 +8,11 @@ let major = semver.major(tag);
 let minor = major + '.' + semver.minor(tag);
 
 let tags = [
-    'v' + major,
-    'v' + minor,
+    major,
+    minor,
 ];
 
+core.info(`Original tag: ${tag}`);
 core.info(`Tags: ${JSON.stringify(tags)}`);
+core.setOutput('original-tag', tag);
 core.setOutput('tags', tags.join("\n"));
