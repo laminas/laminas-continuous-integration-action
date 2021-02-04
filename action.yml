@@ -1,5 +1,8 @@
 name: 'Laminas Continuous Integration'
 description: 'Run a CI check for the package'
+branding:
+  icon: 'check'
+  color: 'green'
 inputs:
   job:
     description: 'JSON string representing the job to run'
