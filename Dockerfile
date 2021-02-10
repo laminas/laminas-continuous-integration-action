@@ -1,4 +1,4 @@
-FROM ghcr.io/laminas/laminas-continuous-integration-container:0
+FROM ghcr.io/laminas/laminas-continuous-integration-container:1
 
 LABEL "repository"="http://github.com/laminas/laminas-continuous-integration-action"
 LABEL "homepage"="http://github.com/laminas/laminas-continuous-integration-action"
