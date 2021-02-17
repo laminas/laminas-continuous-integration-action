@@ -55,3 +55,8 @@ jobs:
         with:
           job: ${{ matrix.job }}
 ```
+
+> ### DO NOT use actions/checkout
+>
+> **DO NOT** use the `actions/checkout` action in a step prior to using this action.
+> Doing so will lead to errors, as this action performs git checkouts into the WORKDIR, and a non-empty WORKDIR causes that operation to fail.
