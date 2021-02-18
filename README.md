@@ -56,7 +56,11 @@ jobs:
           job: ${{ matrix.job }}
 ```
 
-> ### DO NOT use actions/checkout
+> ### actions/checkout not required
 >
-> **DO NOT** use the `actions/checkout` action in a step prior to using this action.
-> Doing so will lead to errors, as this action performs git checkouts into the WORKDIR, and a non-empty WORKDIR causes that operation to fail.
+> The laminas/laminas-continuous-integration-container will perform a checkout of the repository at the requested reference as part of its work, and therefore does not require the actions/checkout action as a preceding step.
+
+### Using locally
+
+Because the action requires input to work, you will need to pull the [laminas/laminas-continuous-integration-container] locally and run your job via the container directly.
+Please see the [container documentation for details](https://github.com/laminas/laminas-continuous-integration-container#using-the-container-locally-to-run-tests).
