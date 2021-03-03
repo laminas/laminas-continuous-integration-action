@@ -2,8 +2,8 @@ FROM composer:2 AS composer
 
 FROM ubuntu:focal
 
-LABEL "repository"="http://github.com/laminas/laminas-continuous-integration-container"
-LABEL "homepage"="http://github.com/laminas/laminas-continuous-integration-container"
+LABEL "repository"="http://github.com/laminas/laminas-continuous-integration-action"
+LABEL "homepage"="http://github.com/laminas/laminas-continuous-integration-action"
 LABEL "maintainer"="https://github.com/laminas/technical-steering-committee/"
 
 ENV COMPOSER_HOME=/usr/local/share/composer
