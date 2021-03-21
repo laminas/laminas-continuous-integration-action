@@ -1,6 +1,6 @@
 # Laminas Continuous Integration GitHub Action
 
-This repository represents a GitHub Action that runs a single PHP QA job, using the [laminas/laminas-continuous-integration image](https://ghcr.io/laminas/laminas-continuous-integration].
+This repository represents a GitHub Action that runs a single PHP QA job, using the [laminas/laminas-continuous-integration image](https://ghcr.io/laminas/laminas-continuous-integration).
 
 A job is presented as an argument to the container, and will be a JSON string representing the job to run.
 
