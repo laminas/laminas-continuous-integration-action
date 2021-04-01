@@ -193,7 +193,7 @@ fi
 set +e
 
 echo "Running ${COMMAND}"
-sudo --preserve-env -u testuser /bin/bash -c "${COMMAND}"
+sudo --preserve-env --set-home -u testuser /bin/bash -c "${COMMAND}"
 STATUS=$?
 
 set -e
