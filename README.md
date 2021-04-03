@@ -35,13 +35,7 @@ Create `.github/workflows/continuous-integration.yml` file with following conten
 ```yaml
 name: "Continuous Integration"
 
-on:
-  pull_request:
-  push:
-    branches:
-      - '[0-9]+.[0-9]+.x'
-      - 'refs/pull/*'
-    tags:
+on: [push, pull_request]
 
 jobs:
   matrix:
@@ -53,7 +47,6 @@ jobs:
       - name: Gather CI configuration
         id: matrix
         uses: laminas/laminas-ci-matrix-action@v1
-
   qa:
     name: QA Checks
     needs: [matrix]
