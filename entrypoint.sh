@@ -124,6 +124,15 @@ if [[ "${COMMAND}" == "" ]];then
     exit 1
 fi
 
+echo "Marking PHP ${PHP} as configured default"
+update-alternatives --set php /usr/bin/php${PHP}
+
+# Is there a pre-install script available?
+if [ -x ".laminas-ci/pre-install.sh" ];then
+    echo "Executing pre-install commands from .laminas-ci/pre-install.sh"
+    ./.laminas-ci/pre-install.sh testuser "${PWD}" "${JOB}"
+fi
+
 EXTENSIONS=$(echo "${JOB}" | jq -r ".extensions | map(\"php${PHP}-\"+.) | join(\" \")")
 INI=$(echo "${JOB}" | jq -r '.ini | join("{NL}")')
 DEPS=$(echo "${JOB}" | jq -r '.dependencies')
@@ -153,9 +162,6 @@ if [[ "${INI}" != "" ]];then
     echo "Installing php.ini settings"
     echo $INI | sed "s/{NL}/\n/g" > /etc/php/${PHP}/cli/conf.d/99-settings.ini
 fi
-
-echo "Marking PHP ${PHP} as configured default"
-update-alternatives --set php /usr/bin/php${PHP}
 
 echo "PHP version: $(php --version)"
 echo "Installed extensions:"
