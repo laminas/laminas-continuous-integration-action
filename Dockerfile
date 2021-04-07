@@ -23,9 +23,10 @@ RUN apt update \
         yamllint \
         zip \
         msodbcsql17 \
-        php5.6-cli \
         php5.6-bz2 \
+        php5.6-cli \
         php5.6-curl \
+        php5.6-dev \
         php5.6-fileinfo \
         php5.6-intl \
         php5.6-json \
@@ -39,6 +40,7 @@ RUN apt update \
         php7.0-cli \
         php7.0-bz2 \
         php7.0-curl \
+        php7.0-dev \
         php7.0-fileinfo \
         php7.0-intl \
         php7.0-json \
@@ -52,6 +54,7 @@ RUN apt update \
         php7.1-cli \
         php7.1-bz2 \
         php7.1-curl \
+        php7.1-dev \
         php7.1-fileinfo \
         php7.1-intl \
         php7.1-json \
@@ -65,6 +68,7 @@ RUN apt update \
         php7.2-cli \
         php7.2-bz2 \
         php7.2-curl \
+        php7.2-dev \
         php7.2-fileinfo \
         php7.2-intl \
         php7.2-json \
@@ -78,6 +82,7 @@ RUN apt update \
         php7.3-cli \
         php7.3-bz2 \
         php7.3-curl \
+        php7.3-dev \
         php7.3-fileinfo \
         php7.3-intl \
         php7.3-json \
@@ -91,6 +96,7 @@ RUN apt update \
         php7.4-cli \
         php7.4-bz2 \
         php7.4-curl \
+        php7.4-dev \
         php7.4-fileinfo \
         php7.4-intl \
         php7.4-json \
@@ -104,6 +110,7 @@ RUN apt update \
         php8.0-cli \
         php8.0-bz2 \
         php8.0-curl \
+        php8.0-dev \
         php8.0-fileinfo \
         php8.0-intl \
         php8.0-mbstring \
