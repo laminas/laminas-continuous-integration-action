@@ -5,7 +5,7 @@ on:
     types: [published]
 
 jobs:
-  release-contaienr:
+  release-container:
     runs-on: ubuntu-latest
     steps:
       - name: Compile tag list
