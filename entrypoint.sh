@@ -125,7 +125,9 @@ if [[ "${COMMAND}" == "" ]];then
 fi
 
 echo "Marking PHP ${PHP} as configured default"
-update-alternatives --set php /usr/bin/php${PHP}
+update-alternatives --quiet --set php /usr/bin/php${PHP}
+update-alternatives --quiet --set php-config /usr/bin/php-config${PHP}
+update-alternatives --quiet --set phpize /usr/bin/phpize${PHP}
 
 # Is there a pre-install script available?
 if [ -x ".laminas-ci/pre-install.sh" ];then
