@@ -129,6 +129,8 @@ update-alternatives --quiet --set php /usr/bin/php${PHP}
 update-alternatives --quiet --set php-config /usr/bin/php-config${PHP}
 update-alternatives --quiet --set phpize /usr/bin/phpize${PHP}
 
+checkout
+
 # Is there a pre-install script available?
 if [ -x ".laminas-ci/pre-install.sh" ];then
     echo "Executing pre-install commands from .laminas-ci/pre-install.sh"
@@ -168,8 +170,6 @@ fi
 echo "PHP version: $(php --version)"
 echo "Installed extensions:"
 php -m
-
-checkout
 
 composer_install "${DEPS}" "${PHP}"
 
