@@ -68,7 +68,7 @@ Other times, you may want to do additional reporting, particularly if the QA com
 To enable this, you may create one or more of the following files in your package:
 
 - `.laminas-ci/pre-install.sh`
-- `.laminas-ci/pre-run.sh` 
+- `.laminas-ci/pre-run.sh`
 - `.laminas-ci/post-run.sh`
 
 (Note: the files MUST be executable to be consumed!)
@@ -125,6 +125,20 @@ fi
 ```
 
 If you need access to the list of extensions or php.ini directives, you should likely write a script in PHP or node to do so.
+
+#### Using PECL
+
+One key reason to use a `.laminas-ci/pre-install.sh` script is to install an extension via PECL.
+You may need to do this if no corresponding package exists for an extension you need, or if you need to test against a different version than is in the Sury repository.
+
+An example of such a script:
+
+```bash
+#!/bin/bsh
+# .laminas-ci/pre-install.sh
+
+pecl install couchbase-2.6.2
+```
 
 ### Using locally
 
