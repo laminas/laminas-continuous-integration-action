@@ -134,7 +134,7 @@ if [ -x ".laminas-ci/pre-install.sh" ];then
 fi
 
 EXTENSIONS=$(echo "${JOB}" | jq -r ".extensions | map(\"php${PHP}-\"+.) | join(\" \")")
-INI=$(echo "${JOB}" | jq -r '.ini | join("{NL}")')
+INI=$(echo "${JOB}" | jq -r '.ini | join("\n")')
 DEPS=$(echo "${JOB}" | jq -r '.dependencies')
 
 if [[ "${EXTENSIONS}" != "" ]];then
@@ -160,7 +160,7 @@ fi
 
 if [[ "${INI}" != "" ]];then
     echo "Installing php.ini settings"
-    echo $INI | sed "s/{NL}/\n/g" > /etc/php/${PHP}/cli/conf.d/99-settings.ini
+    echo "$INI" > /etc/php/${PHP}/cli/conf.d/99-settings.ini
 fi
 
 echo "PHP version: $(php --version)"
