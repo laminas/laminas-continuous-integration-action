@@ -65,15 +65,21 @@ jobs:
 Some packages may require additional setup steps: setting up a web server to test an HTTP client, seeding a database or cache service, etc.
 Other times, you may want to do additional reporting, particularly if the QA command failed.
 
-To enable this, you may create one or both of the following files in your package:
+To enable this, you may create one or more of the following files in your package:
 
-- `.laminas-ci/pre-run.sh`
+- `.laminas-ci/pre-install.sh`
+- `.laminas-ci/pre-run.sh` 
 - `.laminas-ci/post-run.sh`
 
 (Note: the files MUST be executable to be consumed!)
 
-These run immediately before and after the QA command, respectively.
-The `.laminas-ci/pre-run.sh` command will receive the following arguments:
+The `.laminas-ci/pre-install.sh` command runs before any other command is executed in the action, and will receive the following arguments:
+
+- `$1`: the user the QA command will run under
+- `$2`: the WORKDIR path
+- `$3`: the `$JOB` passed to the entrypoint (see above)
+
+The `.laminas-ci/pre-run.sh` command runs immediately prior to the QA command, and will receive the following arguments:
 
 - `$1`: the user the QA command will run under
 - `$2`: the WORKDIR path
