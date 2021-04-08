@@ -117,6 +117,11 @@ if [[ "${COMMAND}" == "" ]];then
     exit 1
 fi
 
+if [[ "${$COMMAND}" == "null"];then
+    echo "Command is \"null\"; nothing to run"
+    exit 0
+fi
+
 PHP=$(echo "${JOB}" | jq -r '.php')
 if [[ "${COMMAND}" == "" ]];then
     echo "Missing PHP version in job"
