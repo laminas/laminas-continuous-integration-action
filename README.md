@@ -12,10 +12,10 @@ The JSON string should represent an object with the following information:
 {
   "php": "string PHP minor version to run against",
   "extensions": [
-    "extension names to install; names are from the ondrej PHP repository, minus the php{VERSION}- prefix",
+    "extension names to install; names are from the ondrej PHP repository, minus the php{VERSION}- prefix"
   ],
   "ini": [
-    "php.ini directives, one per element; e.g. 'memory_limit=-1'",
+    "php.ini directives, one per element; e.g. 'memory_limit=-1'"
   ],
   "dependencies": "dependencies to test against; one of lowest, locked, latest",
   "command": "command to run to perform the check (empty in case you dont want to excecute any command)"
