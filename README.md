@@ -18,7 +18,7 @@ The JSON string should represent an object with the following information:
     "php.ini directives, one per element; e.g. 'memory_limit=-1'",
   ],
   "dependencies": "dependencies to test against; one of lowest, locked, latest",
-  "command": "command to run to perform the check",
+  "command": "command to run to perform the check (empty in case you dont want to excecute any command)"
 }
 ```
 
