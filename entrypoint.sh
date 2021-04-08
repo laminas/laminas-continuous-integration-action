@@ -111,10 +111,10 @@ JOB=$1
 echo "Received job: ${JOB}"
 
 COMMAND=$(echo "${JOB}" | jq -r '.command')
-if [[ "${COMMAND}" == "" ]];then
-    echo "Missing command in job; nothing to run"
-    help
-    exit 1
+
+if [[ "${$COMMAND}" == ""];then
+    echo "Command is empty; nothing to run"
+    exit 0
 fi
 
 PHP=$(echo "${JOB}" | jq -r '.php')
