@@ -110,14 +110,14 @@ fi
 JOB=$1
 echo "Received job: ${JOB}"
 
-COMMAND=$(echo "${JOB}" | jq -r '.command')
+COMMAND=$(echo "${JOB}" | jq -r '.command // ""')
 
 if [[ "${COMMAND}" == "" ]];then
     echo "Command is empty; nothing to run"
     exit 0
 fi
 
-PHP=$(echo "${JOB}" | jq -r '.php')
+PHP=$(echo "${JOB}" | jq -r '.php // ""')
 if [[ "${PHP}" == "" ]];then
     echo "Missing PHP version in job"
     help
@@ -137,9 +137,9 @@ if [ -x ".laminas-ci/pre-install.sh" ];then
     ./.laminas-ci/pre-install.sh testuser "${PWD}" "${JOB}"
 fi
 
-EXTENSIONS=$(echo "${JOB}" | jq -r ".extensions | map(\"php${PHP}-\"+.) | join(\" \")")
-INI=$(echo "${JOB}" | jq -r '.ini | join("\n")')
-DEPS=$(echo "${JOB}" | jq -r '.dependencies')
+EXTENSIONS=$(echo "${JOB}" | jq -r ".extensions // [] | map(\"php${PHP}-\"+.) | join(\" \")")
+INI=$(echo "${JOB}" | jq -r '.ini // [] | join("\n")')
+DEPS=$(echo "${JOB}" | jq -r '.dependencies // "locked"')
 
 if [[ "${EXTENSIONS}" != "" ]];then
 	ENABLE_SQLSRV=false
