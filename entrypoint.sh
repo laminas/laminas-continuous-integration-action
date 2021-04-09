@@ -118,7 +118,7 @@ if [[ "${COMMAND}" == "" ]];then
 fi
 
 PHP=$(echo "${JOB}" | jq -r '.php')
-if [[ "${PHP}" == "" || "${PHP}" == "null" ]];then
+if [[ "${PHP}" == "" ]];then
     echo "Missing PHP version in job"
     help
     exit 1
