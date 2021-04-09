@@ -112,13 +112,13 @@ echo "Received job: ${JOB}"
 
 COMMAND=$(echo "${JOB}" | jq -r '.command')
 
-if [[ "${$COMMAND}" == ""];then
+if [[ "${COMMAND}" == "" ]];then
     echo "Command is empty; nothing to run"
     exit 0
 fi
 
 PHP=$(echo "${JOB}" | jq -r '.php')
-if [[ "${COMMAND}" == "" ]];then
+if [[ "${PHP}" == "" || "${PHP}" == "null" ]];then
     echo "Missing PHP version in job"
     help
     exit 1
