@@ -112,7 +112,7 @@ echo "Received job: ${JOB}"
 
 COMMAND=$(echo "${JOB}" | jq -r '.command // ""')
 
-if [[ "${COMMAND}" == "" ];then
+if [[ "${COMMAND}" == "" ]];then
     echo "Command is empty; nothing to run"
     exit 0
 fi
