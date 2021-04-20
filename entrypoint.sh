@@ -75,8 +75,9 @@ function checkout {
 function composer_install {
     local DEPS=$1
     local PHP=$2
+    local IGNORE_PLATFORM_REQS_ON_8=$3
     local COMPOSER_ARGS="--ansi --no-interaction --no-progress --prefer-dist"
-    if [[ "${PHP}" =~ ^8. ]];then
+    if [[ "${IGNORE_PLATFORM_REQS_ON_8}" == "yes" && "${PHP}" =~ ^8. ]];then
         # TODO: Remove this when it's not an issue, and/or provide a config
         # option to disable the behavior.
         COMPOSER_ARGS="${COMPOSER_ARGS} --ignore-platform-req=php"
@@ -140,6 +141,7 @@ fi
 EXTENSIONS=$(echo "${JOB}" | jq -r ".extensions // [] | map(\"php${PHP}-\"+.) | join(\" \")")
 INI=$(echo "${JOB}" | jq -r '.ini // [] | join("\n")')
 DEPS=$(echo "${JOB}" | jq -r '.dependencies // "locked"')
+IGNORE_PLATFORM_REQS_ON_8=$(echo "${JOB}" | jq -r 'if has("ignore_platform_reqs_8") | not then "yes" elif .ignore_platform_reqs_8 then "yes" else "no" end')
 
 if [[ "${EXTENSIONS}" != "" ]];then
 	ENABLE_SQLSRV=false
@@ -171,7 +173,7 @@ echo "PHP version: $(php --version)"
 echo "Installed extensions:"
 php -m
 
-composer_install "${DEPS}" "${PHP}"
+composer_install "${DEPS}" "${PHP}" "${IGNORE_PLATFORM_REQS_ON_8}"
 
 if [[ "${COMMAND}" =~ phpunit ]];then
     echo "Setting up PHPUnit problem matcher"
