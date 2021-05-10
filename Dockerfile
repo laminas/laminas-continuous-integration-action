@@ -16,6 +16,7 @@ RUN apt update \
     && ACCEPT_EULA=Y apt install -y \
         git \
         jq \
+        libxml2-utils \
         libzip-dev \
         npm \
         sudo \

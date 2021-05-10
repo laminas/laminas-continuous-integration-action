@@ -236,6 +236,8 @@ The container provides the following tools:
 
   Consumers can provide their own rules via a [.markdownlint.json](https://github.com/DavidAnson/markdownlint-cli2#markdownlintjsonc-or-markdownlintjson) file.
 
+- A `xmllint` binary, via the [libxml2-utils](https://packages.debian.org/stretch/libxml2-utils) package.
+
 - A `yamllint` binary, via the [adrienverge/yamllint](https://github.com/adrienverge/yamllint) package.
 
 - The [jq](https://stedolan.github.io/jq/) command, a CLI JSON processor.
