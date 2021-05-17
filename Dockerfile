@@ -150,8 +150,9 @@ COPY etc/markdownlint.json /etc/laminas-ci/markdownlint.json
 COPY --from=composer /usr/bin/composer /usr/bin/composer
 
 RUN mkdir -p /usr/local/share/composer \
-    && composer global require staabm/annotate-pull-request-from-checkstyle \
-    && ln -s /usr/local/share/composer/vendor/bin/cs2pr /usr/local/bin/cs2pr
+    && composer global require staabm/annotate-pull-request-from-checkstyle ergebnis/composer-normalize \
+    && ln -s /usr/local/share/composer/vendor/bin/cs2pr /usr/local/bin/cs2pr \
+    && ln -s /usr/local/share/composer/vendor/bin/composer-normalize /usr/local/bin/composer-normalize
 
 COPY entrypoint.sh /usr/local/bin/entrypoint.sh
 
