@@ -74,6 +74,6 @@ for EXTENSION in "${STATIC_EXTENSIONS[@]}";do
 done
 
 # If by now the extensions list is not empty, install packaged extensions.
-if [[ "${EXTENSIONS[*]}" != "" ]];then
+if [[ ${#EXTENSIONS[@]} != 0 ]];then
     install_packaged_extensions "${EXTENSIONS[@]}"
 fi
