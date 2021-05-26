@@ -24,3 +24,8 @@ done
 # Cleanup
 rm -rf /tmp/swoole-${SWOOLE_VERSION}
 rm /tmp/swoole-${SWOOLE_VERSION}.tgz
+
+# Copy conf file to appropriate locations
+for PHP_VERSION in 7.3 7.4 8.0;do
+    cp /mods-available/swoole.ini /etc/php/${PHP_VERSION}/mods-available/swoole.ini
+done
