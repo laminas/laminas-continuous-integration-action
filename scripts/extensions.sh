@@ -8,6 +8,18 @@ set -e
 
 STATIC_EXTENSIONS=(sqlsrv swoole)
 
+function match_in_array {
+    local NEEDLE="$1"
+    local -a ARRAY_SET=("${@:2}")
+    local item
+
+    for item in "${ARRAY_SET[@]}";do
+        [[ "${item}" =~ ${NEEDLE} ]] && return 0
+    done
+
+    return 1
+}
+
 function install_packaged_extensions {
     local -a EXTENSIONS=("${@:1}")
     local TO_INSTALL="${EXTENSIONS[*]}"
@@ -60,16 +72,22 @@ function enable_swoole {
 
 PHP=$1
 EXTENSIONS=("${@:2}")
-declare result
+declare result ENABLE_FUNC
 
 # Loop through known statically compiled/installed extensions, and enable them.
 # Each should update the result variable passed to it with a new list of
 # extensions.
 for EXTENSION in "${STATIC_EXTENSIONS[@]}";do
-    if [[ "${EXTENSIONS[*]}" =~ ${EXTENSION} ]];then
+    if match_in_array "${EXTENSION}" "${EXTENSIONS[@]}" ; then
         ENABLE_FUNC="enable_${EXTENSION}"
         $ENABLE_FUNC result "${PHP}" "${EXTENSIONS[*]}"
-        EXTENSIONS=("${result}")
+
+		# Validate that we don't have just whitespace in the list
+        if [[ -z "${result// }" ]];then
+            EXTENSIONS=()
+        else
+            EXTENSIONS=("${result}")
+        fi
     fi
 done
 
