@@ -129,9 +129,7 @@ RUN apt update \
 # Build/install static modules that do not have packages
 COPY mods-available /mods-available
 COPY mods-install /mods-install
-RUN for INSTALLER in /mods-install/*.sh;do \
-  /mods-install/${INSTALLER} \
-  done
+RUN for INSTALLER in /mods-install/*.sh;do ${INSTALLER} ; done
 
 RUN mkdir -p /etc/laminas-ci/problem-matcher \
     && cd /etc/laminas-ci/problem-matcher \
@@ -146,6 +144,7 @@ RUN mkdir -p /usr/local/share/composer \
     && composer global require staabm/annotate-pull-request-from-checkstyle \
     && ln -s /usr/local/share/composer/vendor/bin/cs2pr /usr/local/bin/cs2pr
 
+COPY scripts /scripts
 COPY entrypoint.sh /usr/local/bin/entrypoint.sh
 
 RUN useradd -ms /bin/bash testuser
