@@ -140,6 +140,14 @@ COPY mods-available/sqlsrv.ini /etc/php/7.3/mods-available/sqlsrv.ini
 COPY mods-available/sqlsrv.ini /etc/php/7.4/mods-available/sqlsrv.ini
 COPY mods-available/sqlsrv.ini /etc/php/8.0/mods-available/sqlsrv.ini
 
+# Install swoole modules for PHP 7.3 - 8.0
+# (we don't need to support earlier than that in mezzio-swoole)
+COPY mods-available/swoole.ini /etc/php/7.3/mods-available/swoole.ini
+COPY mods-available/swoole.ini /etc/php/7.4/mods-available/swoole.ini
+COPY mods-available/swoole.ini /etc/php/8.0/mods-available/swoole.ini
+COPY scripts/install_swoole.sh /tmp/install_swoole.sh
+RUN /tmp/install_swoole.sh && rm /tmp/install_swoole.sh
+
 RUN mkdir -p /etc/laminas-ci/problem-matcher \
     && cd /etc/laminas-ci/problem-matcher \
     && wget https://raw.githubusercontent.com/shivammathur/setup-php/master/src/configs/phpunit.json \

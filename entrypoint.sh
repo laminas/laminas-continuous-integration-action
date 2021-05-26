@@ -159,6 +159,16 @@ if [[ "${EXTENSIONS}" != "" ]];then
 		EXTENSIONS=$(echo ${EXTENSIONS} | sed -E -e 's/php[0-9.]+-(pdo[_-]){0,1}sqlsrv/ /g' | sed -E -e 's/\s{2,}/ /g')
 	fi
 
+	ENABLE_SWOOLE=false
+	if [[ "${EXTENSIONS}" =~ swoole ]];then
+		if [[ ! ${PHP} =~ (7.3|7.4|8.0) ]];then
+			echo "Skipping enabling of swoole extension; not supported on PHP < 7.3"
+		else
+			ENABLE_SWOOLE=true
+		fi
+		EXTENSIONS=$(echo ${EXTENSIONS} | sed -E -e 's/php[0-9.]+-swoole/ /g' | sed -E -e 's/\s{2,}/ /g')
+	fi
+
     echo "Installing extensions: ${EXTENSIONS}"
     apt update
     apt install -y ${EXTENSIONS}
@@ -166,6 +176,11 @@ if [[ "${EXTENSIONS}" != "" ]];then
 	if [[ "${ENABLE_SQLSRV}" == "true" ]];then
 		echo "Enabling sqlsrv extensions"
 		phpenmod -v ${PHP} -s ALL sqlsrv
+	fi
+
+	if [[ "${ENABLE_SWOOLE}" == "true" ]];then
+		echo "Enabling swoole extensions"
+		phpenmod -v ${PHP} -s ALL swoole
 	fi
 fi
 
