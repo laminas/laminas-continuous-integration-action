@@ -126,27 +126,10 @@ RUN apt update \
     && npm install -g markdownlint-cli2 \
     && ln -s /usr/local/bin/markdownlint-cli2 /usr/local/bin/markdownlint
 
-# Install sqlsrv modules for PHP 7.3 - 8.0 (none available on Ubuntu 2.0.4 prior to that)
-RUN (curl -L https://github.com/microsoft/msphpsql/releases/download/v5.9.0/Ubuntu2004-7.3.tar | tar xf - --strip-components=1 Ubuntu2004-7.3/php_pdo_sqlsrv_73_nts.so Ubuntu2004-7.3/php_sqlsrv_73_nts.so) \
-    && (curl -L https://github.com/microsoft/msphpsql/releases/download/v5.9.0/Ubuntu2004-7.4.tar | tar xf - --strip-components=1 Ubuntu2004-7.4/php_pdo_sqlsrv_74_nts.so Ubuntu2004-7.4/php_sqlsrv_74_nts.so) \
-    && (curl -L https://github.com/microsoft/msphpsql/releases/download/v5.9.0/Ubuntu2004-8.0.tar | tar xf - --strip-components=1 Ubuntu2004-8.0/php_pdo_sqlsrv_80_nts.so Ubuntu2004-8.0/php_sqlsrv_80_nts.so) \
-    && mv php_pdo_sqlsrv_73_nts.so $(php7.3 -i | grep -P '^extension_dir' | sed -E -e 's/^extension_dir\s+=>\s+\S+\s+=>\s+(.*)$/\1/')/pdo_sqlsrv.so \
-    && mv php_sqlsrv_73_nts.so $(php7.3 -i | grep -P '^extension_dir' | sed -E -e 's/^extension_dir\s+=>\s+\S+\s+=>\s+(.*)$/\1/')/sqlsrv.so \
-    && mv php_pdo_sqlsrv_74_nts.so $(php7.4 -i | grep -P '^extension_dir' | sed -E -e 's/^extension_dir\s+=>\s+\S+\s+=>\s+(.*)$/\1/')/pdo_sqlsrv.so \
-    && mv php_sqlsrv_74_nts.so $(php7.4 -i | grep -P '^extension_dir' | sed -E -e 's/^extension_dir\s+=>\s+\S+\s+=>\s+(.*)$/\1/')/sqlsrv.so \
-    && mv php_pdo_sqlsrv_80_nts.so $(php8.0 -i | grep -P '^extension_dir' | sed -E -e 's/^extension_dir\s+=>\s+\S+\s+=>\s+(.*)$/\1/')/pdo_sqlsrv.so \
-    && mv php_sqlsrv_80_nts.so $(php8.0 -i | grep -P '^extension_dir' | sed -E -e 's/^extension_dir\s+=>\s+\S+\s+=>\s+(.*)$/\1/')/sqlsrv.so 
-COPY mods-available/sqlsrv.ini /etc/php/7.3/mods-available/sqlsrv.ini
-COPY mods-available/sqlsrv.ini /etc/php/7.4/mods-available/sqlsrv.ini
-COPY mods-available/sqlsrv.ini /etc/php/8.0/mods-available/sqlsrv.ini
-
-# Install swoole modules for PHP 7.3 - 8.0
-# (we don't need to support earlier than that in mezzio-swoole)
-COPY mods-available/swoole.ini /etc/php/7.3/mods-available/swoole.ini
-COPY mods-available/swoole.ini /etc/php/7.4/mods-available/swoole.ini
-COPY mods-available/swoole.ini /etc/php/8.0/mods-available/swoole.ini
-COPY scripts/install_swoole.sh /tmp/install_swoole.sh
-RUN /tmp/install_swoole.sh && rm /tmp/install_swoole.sh
+# Build/install static modules that do not have packages
+COPY mods-available /mods-available
+COPY mods-install /mods-install
+RUN for INSTALLER in /mods-install/*.sh;do ${INSTALLER} ; done
 
 RUN mkdir -p /etc/laminas-ci/problem-matcher \
     && cd /etc/laminas-ci/problem-matcher \
@@ -161,6 +144,7 @@ RUN mkdir -p /usr/local/share/composer \
     && composer global require staabm/annotate-pull-request-from-checkstyle \
     && ln -s /usr/local/share/composer/vendor/bin/cs2pr /usr/local/bin/cs2pr
 
+COPY scripts /scripts
 COPY entrypoint.sh /usr/local/bin/entrypoint.sh
 
 RUN useradd -ms /bin/bash testuser
