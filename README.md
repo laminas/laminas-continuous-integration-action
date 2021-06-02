@@ -53,6 +53,8 @@ jobs:
     steps:
       - name: ${{ matrix.name }}
         uses: laminas/laminas-continuous-integration-action@v1
+        env:
+          "GITHUB_TOKEN": ${{ secrets.GITHUB_TOKEN }}
         with:
           job: ${{ matrix.job }}
 ```
@@ -60,6 +62,11 @@ jobs:
 > ### actions/checkout not required
 >
 > The action will perform a checkout of the repository at the requested reference as part of its work, and therefore does not require the actions/checkout action as a preceding step.
+
+> ### GITHUB_TOKEN not required
+>
+> While injection of the `GITHUB_TOKEN` env variable is demonstrated above, in most cases it is not necessary.
+> Only add it if you start seeing rate limit issues when using Composer (e.g., when you receive a "Could not authenticate against github.com" message when installing dependencies).
 
 ### Pre/Post commands
 

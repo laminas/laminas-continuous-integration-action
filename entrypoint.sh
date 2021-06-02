@@ -66,10 +66,10 @@ function checkout {
 
     if [[ "$REF" == "$LOCAL_BRANCH" ]];then
         echo "Checking out ref ${REF}"
-        git checkout $REF
+        git checkout "$REF"
     else
         echo "Checking out branch ${BASE_BRANCH}"
-        git checkout ${BASE_BRANCH}
+        git checkout "${BASE_BRANCH}"
         echo "Fetching ref ${REF}"
         git fetch origin "${REF}":"${LOCAL_BRANCH_NAME}"
         echo "Checking out target ref to ${LOCAL_BRANCH_NAME}"
@@ -91,14 +91,17 @@ function composer_install {
     case $DEPS in
         lowest)
             echo "Installing lowest supported dependencies via Composer"
+            # shellcheck disable=SC2086
             composer update ${COMPOSER_ARGS} --prefer-lowest
             ;;
         latest)
             echo "Installing latest supported dependencies via Composer"
+            # shellcheck disable=SC2086
             composer update ${COMPOSER_ARGS}
             ;;
         *)
             echo "Installing dependencies as specified in lockfile via Composer"
+            # shellcheck disable=SC2086
             composer install ${COMPOSER_ARGS}
             ;;
     esac
@@ -131,9 +134,9 @@ if [[ "${PHP}" == "" ]];then
 fi
 
 echo "Marking PHP ${PHP} as configured default"
-update-alternatives --quiet --set php /usr/bin/php${PHP}
-update-alternatives --quiet --set php-config /usr/bin/php-config${PHP}
-update-alternatives --quiet --set phpize /usr/bin/phpize${PHP}
+update-alternatives --quiet --set php "/usr/bin/php${PHP}"
+update-alternatives --quiet --set php-config "/usr/bin/php-config${PHP}"
+update-alternatives --quiet --set phpize "/usr/bin/phpize${PHP}"
 
 checkout
 
@@ -154,24 +157,28 @@ fi
 
 if [[ "${INI}" != "" ]];then
     echo "Installing php.ini settings"
-    echo "$INI" > /etc/php/${PHP}/cli/conf.d/99-settings.ini
+    echo "$INI" > "/etc/php/${PHP}/cli/conf.d/99-settings.ini"
 fi
 
 echo "PHP version: $(php --version)"
 echo "Installed extensions:"
 php -m
 
+# If a token is present, tell Composer about it so we can avoid rate limits
+if [[ "${GITHUB_TOKEN}" != "" ]];then
+    composer config --global github-oauth.github.com "${GITHUB_TOKEN}"
+fi
 composer_install "${DEPS}" "${PHP}" "${IGNORE_PLATFORM_REQS_ON_8}"
 
 if [[ "${COMMAND}" =~ phpunit ]];then
     echo "Setting up PHPUnit problem matcher"
-    cp /etc/laminas-ci/problem-matcher/phpunit.json $(pwd)/phpunit.json
+    cp /etc/laminas-ci/problem-matcher/phpunit.json "$(pwd)/phpunit.json"
     echo "::add-matcher::phpunit.json"
 fi
 
 if [[ "${COMMAND}" =~ markdownlint ]];then
     echo "Setting up markdownlint problem matcher"
-    cp /etc/laminas-ci/problem-matcher/markdownlint.json $(pwd)/markdownlint-matcher.json
+    cp /etc/laminas-ci/problem-matcher/markdownlint.json "$(pwd)/markdownlint-matcher.json"
     echo "::add-matcher::markdownlint-matcher.json"
     if [ ! -f ".markdownlint.json" ];then
         echo "Installing markdownlint configuration"
