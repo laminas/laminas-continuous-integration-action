@@ -145,6 +145,7 @@ RUN mkdir -p /usr/local/share/composer \
     && ln -s /usr/local/share/composer/vendor/bin/cs2pr /usr/local/bin/cs2pr
 
 COPY scripts /scripts
+RUN /scripts/php_ini_dev_settings.sh
 COPY entrypoint.sh /usr/local/bin/entrypoint.sh
 
 RUN useradd -ms /bin/bash testuser
