@@ -40,6 +40,7 @@ jobs:
           context: .
           file: ./Dockerfile
           platforms: linux/amd64
+          pull: true
           push: true
           tags: ${{ join(fromJSON(steps.tags.outputs.tags), ',') }}
           cache-from: type=registry,ref=ghcr.io/laminas/laminas-continuous-integration-action:build-cache
