@@ -162,7 +162,7 @@ fi
 
 echo "PHP version: $(php --version)"
 echo "Installed extensions:"
-php -m
+/usr/local/bin/php-extensions-with-version.php
 
 # If a token is present, tell Composer about it so we can avoid rate limits
 if [[ "${GITHUB_TOKEN}" != "" ]];then
