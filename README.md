@@ -183,7 +183,7 @@ The tricks to remember are:
 As an example, if you wanted to run the CS checks under PHP 7.4 using locked dependencies, you could do something like the following:
 
 ```bash
-$ docker run -v $(realpath .):/github/workspace -w=/github/workspace laminas-check-runner:latest '{"php":"7.4","deps":"locked","extensions":[],"ini":["memory_limit=-1"],"command":"./vendor/bin/phpcs"}'
+$ docker run -v $(realpath .):/github/workspace -w=/github/workspace laminas-check-runner:latest '{"php":"7.4","dependencies":"locked","extensions":[],"ini":["memory_limit=-1"],"command":"./vendor/bin/phpcs"}'
 ```
 
 The trick to remember: the job JSON should generally be in single quotes, to allow the `"` characters used to delimit properties and strings in the JSON to not cause interpolation issues.
