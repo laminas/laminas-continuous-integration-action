@@ -44,7 +44,7 @@ function enable_sqlsrv {
     local -a EXTENSIONS=("${@:3}")
     local TO_RETURN
 
-    if [[ ! ${PHP} =~ (7.3|7.4|8.0) ]];then
+    if [[ ! ${PHP} =~ (7.3|7.4|8.0|8.1) ]];then
         echo "Skipping enabling of sqlsrv extension; not supported on PHP < 7.3"
     else
         enable_static_extension "${PHP}" sqlsrv
@@ -61,7 +61,7 @@ function enable_swoole {
     local TO_RETURN
 
     if [[ ! ${PHP} =~ (7.3|7.4|8.0) ]];then
-        echo "Skipping enabling of swoole extension; not supported on PHP < 7.3"
+        echo "Skipping enabling of swoole extension; not supported on PHP < 7.3 || >= 8.1"
     else
         enable_static_extension "${PHP}" swoole
     fi
