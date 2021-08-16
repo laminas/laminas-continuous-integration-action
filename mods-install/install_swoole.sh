@@ -2,7 +2,7 @@
 
 set -e
 
-SWOOLE_VERSION=4.6.7
+SWOOLE_VERSION=4.7.0
 
 # Get swoole package ONCE
 cd /tmp
