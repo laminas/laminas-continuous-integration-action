@@ -23,6 +23,7 @@ RUN cd /setup/php/7.2 && bash setup.sh
 RUN cd /setup/php/7.3 && bash setup.sh
 RUN cd /setup/php/7.4 && bash setup.sh
 RUN cd /setup/php/8.0 && bash setup.sh
+RUN cd /setup/php/8.1 && bash setup.sh
 
 # Set default PHP version
 RUN update-alternatives --set php /usr/bin/php7.4 \
