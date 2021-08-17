@@ -1,3 +1,5 @@
+#!/bin/bash
+
 apt update \
     && apt install -y software-properties-common curl \
     && (curl -sSL https://packages.microsoft.com/keys/microsoft.asc | apt-key add -) \
