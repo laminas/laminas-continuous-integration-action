@@ -15,7 +15,7 @@ for mod in /etc/php/8.1/cli/conf.d/*; do
     modWithoutPriority=$(echo $(basename $mod) | cut -d'-' -f2-)
     modname=$(echo $modWithoutPriority | cut -d'.' -f1)
 
-    mv /etc/php/8.1/cli/conf.d/$mod /etc/php/8.1/mods-available/$modWithoutPriority
+    mv $mod /etc/php/8.1/mods-available/$modWithoutPriority
 
     case "$modname" in
         "xdebug" | "sqlsrv" | "pdo_sqlsrv")
