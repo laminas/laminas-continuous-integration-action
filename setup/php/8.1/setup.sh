@@ -11,8 +11,8 @@ rm -rf /etc/php/8.1
 mkdir -p /etc/php/8.1/{cli,mods-available}
 ln -s $CONFIGURATION_DIRECTORY_PREFIX/php.ini /etc/php/8.1/cli/
 ln -s $CONFIGURATION_DIRECTORY_PREFIX/conf.d /etc/php/8.1/cli/conf.d
-for mod in $(ls /etc/php/8.1/cli/conf.d); do
-    modWithoutPriority=$(echo $mod | cut -d'-' -f2-)
+for mod in /etc/php/8.1/cli/conf.d/*; do
+    modWithoutPriority=$(echo $(basename $mod) | cut -d'-' -f2-)
     modname=$(echo $modWithoutPriority | cut -d'.' -f1)
 
     mv /etc/php/8.1/cli/conf.d/$mod /etc/php/8.1/mods-available/$modWithoutPriority
@@ -22,7 +22,7 @@ for mod in $(ls /etc/php/8.1/cli/conf.d); do
             # Do not enable these modules as default
         ;;
         *)
-            ln -s /etc/php/8.1/mods-available/$modWithoutPriority /etc/php/8.1/cli/conf.d/$mod
+            ln -s /etc/php/8.1/mods-available/$modWithoutPriority $mod
         ;;
     esac
 done
