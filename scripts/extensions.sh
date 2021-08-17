@@ -15,7 +15,7 @@ function install_extensions {
             echo "Cannot install extension for the current PHP version."
             echo "Please use \".laminas-ci/pre-run.sh\" to setup specific extensions for PHP $PHP"
             echo "Additional details can be found on https://stackoverflow.com/q/8141407"
-            echo "The following extensions were not installed: ${EXTENSIONS[@]}"
+            echo "The following extensions were not installed: ${EXTENSIONS[*]}"
         ;;
         *)
             install_packaged_extensions "$PHP" "${EXTENSIONS[@]}"
@@ -58,6 +58,7 @@ ENABLED_EXTENSIONS=$(php -m | tr '[:upper:]' '[:lower:]' | egrep -v '^[\[]' | gr
 EXTENSIONS_TO_INSTALL=()
 
 # Loop through known statically compiled/installed extensions, and enable them.
+# shellcheck disable=SC2068
 for EXTENSION in ${EXTENSIONS[@]}; do
 
     # Check if extension is already enabled
