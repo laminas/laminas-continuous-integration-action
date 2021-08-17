@@ -58,8 +58,8 @@ ENABLED_EXTENSIONS=$(php -m | tr '[:upper:]' '[:lower:]' | egrep -v '^[\[]' | gr
 EXTENSIONS_TO_INSTALL=()
 
 # Loop through known statically compiled/installed extensions, and enable them.
-# shellcheck disable=SC2068
-for EXTENSION in ${EXTENSIONS[@]}; do
+# NOTE: when developing on MacOS, remove the quotes while implementing your changes and re-add the quotes afterwards.
+for EXTENSION in "${EXTENSIONS[@]}"; do
 
     # Check if extension is already enabled
     # shellcheck disable=SC2236,SC2143
