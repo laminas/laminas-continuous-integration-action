@@ -62,8 +62,8 @@ EXTENSIONS_TO_INSTALL=()
 for EXTENSION in "${EXTENSIONS[@]}"; do
 
     # Check if extension is already enabled
-    # shellcheck disable=SC2236,SC2143
-    if [ ! -z "$(echo "${ENABLED_EXTENSIONS}" | grep "${EXTENSION}")" ]; then
+    REGULAR_EXPRESSION=\\b${EXTENSION}\\b
+    if [[ "${ENABLED_EXTENSIONS}" =~ $REGULAR_EXPRESSION ]]; then
         echo "Extension \"$EXTENSION\" is already enabled."
         continue;
     fi
