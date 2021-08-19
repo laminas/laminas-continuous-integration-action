@@ -248,3 +248,19 @@ The container provides the following tools:
 - A `yamllint` binary, via the [adrienverge/yamllint](https://github.com/adrienverge/yamllint) package.
 
 - The [jq](https://stedolan.github.io/jq/) command, a CLI JSON processor.
+
+## Notes on contributing
+
+This package includes a workflow that will build the container during pull request, to verify that builds complete successfully.
+
+The workflow has three different conditional build steps:
+
+- One that happens only on release; this is irrelevant to pull requests.
+- Two that happen for pull requests:
+  - One that triggers if the repository's `CONTAINER_USERNAME` (and, by extension, `CONTAINER_PAT`) secret is present.
+  - One that triggers if the repository's `CONTAINER_USERNAME` (and, by extension, `CONTAINER_PAT`) secret is NOT present.
+
+In the case where the repository secrets are present, the build will also cache layers it has built, which will speed up later builds.
+However, because repository secrets are not provided when a pull request is performed from a forked repository, the second case will kick in; in that scenario, the build will still run, but no layers will be pushed to the container registry.
+
+As such, if you are a Laminas Technical Steering Committee member or a maintainer with write access to this repository, please submit your patches via branches pushed directly to the repository, as this will speed up builds for everyone.
