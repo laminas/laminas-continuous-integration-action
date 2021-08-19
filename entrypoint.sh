@@ -79,12 +79,9 @@ function checkout {
 
 function composer_install {
     local DEPS=$1
-    local PHP=$2
-    local IGNORE_PLATFORM_REQS_ON_8=$3
+    local IGNORE_PHP_PLATFORM_REQUIREMENT=$2
     local COMPOSER_ARGS="--ansi --no-interaction --no-progress --prefer-dist"
-    if [[ "${IGNORE_PLATFORM_REQS_ON_8}" == "yes" && "${PHP}" =~ ^8. ]];then
-        # TODO: Remove this when it's not an issue, and/or provide a config
-        # option to disable the behavior.
+    if [[ "${IGNORE_PHP_PLATFORM_REQUIREMENT}" == "true" ]];then
         COMPOSER_ARGS="${COMPOSER_ARGS} --ignore-platform-req=php"
     fi
 
@@ -150,6 +147,17 @@ EXTENSIONS=$(echo "${JOB}" | jq -r ".extensions // [] | map(\"php${PHP}-\"+.) | 
 INI=$(echo "${JOB}" | jq -r '.ini // [] | join("\n")')
 DEPS=$(echo "${JOB}" | jq -r '.dependencies // "locked"')
 IGNORE_PLATFORM_REQS_ON_8=$(echo "${JOB}" | jq -r 'if has("ignore_platform_reqs_8") | not then "yes" elif .ignore_platform_reqs_8 then "yes" else "no" end')
+IGNORE_PHP_PLATFORM_REQUIREMENT=$(echo "${JOB}" | jq -r '.ignore_php_platform_requirement')
+
+# Old matrix generation
+if [ "${IGNORE_PHP_PLATFORM_REQUIREMENT}" == "null" ]; then
+  IGNORE_PHP_PLATFORM_REQUIREMENT="false"
+
+  # Provide BC compatibility
+  if [ "${IGNORE_PLATFORM_REQS_ON_8}" == "yes" ] && [[ "${PHP}" =~ ^8 ]]; then
+    IGNORE_PHP_PLATFORM_REQUIREMENT="true"
+  fi
+fi
 
 if [[ "${EXTENSIONS}" != "" ]];then
     /scripts/extensions.sh "${PHP}" "${EXTENSIONS}"
@@ -168,7 +176,8 @@ php -m
 if [[ "${GITHUB_TOKEN}" != "" ]];then
     composer config --global github-oauth.github.com "${GITHUB_TOKEN}"
 fi
-composer_install "${DEPS}" "${PHP}" "${IGNORE_PLATFORM_REQS_ON_8}"
+
+composer_install "${DEPS}" "${IGNORE_PHP_PLATFORM_REQUIREMENT}"
 
 if [[ "${COMMAND}" =~ phpunit ]];then
     echo "Setting up PHPUnit problem matcher"
