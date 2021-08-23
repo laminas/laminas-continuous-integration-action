@@ -151,12 +151,12 @@ IGNORE_PHP_PLATFORM_REQUIREMENT=$(echo "${JOB}" | jq -r '.ignore_php_platform_re
 
 # Old matrix generation
 if [ "${IGNORE_PHP_PLATFORM_REQUIREMENT}" == "null" ]; then
-  IGNORE_PHP_PLATFORM_REQUIREMENT="false"
+    IGNORE_PHP_PLATFORM_REQUIREMENT="false"
 
-  # Provide BC compatibility
-  if [ "${IGNORE_PLATFORM_REQS_ON_8}" == "yes" ] && [[ "${PHP}" =~ ^8 ]]; then
-    IGNORE_PHP_PLATFORM_REQUIREMENT="true"
-  fi
+    # Provide BC compatibility
+    if [ "${IGNORE_PLATFORM_REQS_ON_8}" == "yes" ] && [[ "${PHP}" =~ ^8 ]]; then
+        IGNORE_PHP_PLATFORM_REQUIREMENT="true"
+    fi
 fi
 
 if [[ "${EXTENSIONS}" != "" ]];then
