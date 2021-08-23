@@ -18,7 +18,8 @@ The JSON string should represent an object with the following information:
     "php.ini directives, one per element; e.g. 'memory_limit=-1'"
   ],
   "dependencies": "dependencies to test against; one of lowest, locked, latest",
-  "ignore_platform_reqs_on_8": "(boolean; OPTIONAL) Whether or not to ignore platform requirements on PHP 8; defaults to true",
+  "ignore_platform_reqs_on_8": "(boolean; OPTIONAL; DEPRECATED) Whether or not to ignore platform requirements on PHP 8; defaults to true",
+  "ignore_php_platform_requirement": "(boolean; OPTIONAL) Whether or not to ignore PHP platform requirement; defaults to false",
   "command": "command to run to perform the check (empty in case you dont want to excecute any command)"
 }
 ```
