@@ -57,6 +57,8 @@ RUN chmod a+x /scripts/*
 
 RUN /scripts/php_ini_dev_settings.sh
 COPY entrypoint.sh /usr/local/bin/entrypoint.sh
+COPY php-extensions-with-version.php /usr/local/bin/php-extensions-with-version.php
+RUN chmod +x /usr/local/bin/php-extensions-with-version.php
 
 RUN useradd -ms /bin/bash testuser
 
