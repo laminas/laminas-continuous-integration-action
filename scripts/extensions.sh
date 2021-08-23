@@ -6,23 +6,36 @@
 
 set -e
 
-STATIC_EXTENSIONS=(sqlsrv swoole)
+function install_extensions {
+    local PHP=$1
+    local -a EXTENSIONS=("${@:2}")
 
-function match_in_array {
-    local NEEDLE="$1"
-    local -a ARRAY_SET=("${@:2}")
-    local item
-
-    for item in "${ARRAY_SET[@]}";do
-        [[ "${item}" =~ ${NEEDLE} ]] && return 0
-    done
-
-    return 1
+    case "$PHP" in
+        8.1)
+            echo "Cannot install extensions for the current PHP version."
+            echo "Please use \".laminas-ci/pre-run.sh\" to setup specific extensions for PHP $PHP"
+            echo "Additional details can be found on https://stackoverflow.com/q/8141407"
+            echo "The following extensions were not installed: ${EXTENSIONS[*]}"
+        ;;
+        *)
+            install_packaged_extensions "$PHP" "${EXTENSIONS[@]}"
+        ;;
+    esac
 }
 
 function install_packaged_extensions {
-    local -a EXTENSIONS=("${@:1}")
-    local TO_INSTALL="${EXTENSIONS[*]}"
+    local PHP=$1
+    local -a EXTENSIONS=("${@:2}")
+    local TO_INSTALL=""
+
+    for EXTENSION in "${EXTENSIONS[@]}"; do
+        # Converting extension name to package name, e.g. php8.0-redis
+        TO_INSTALL="${TO_INSTALL}php${PHP}-$EXTENSION "
+    done
+
+    if [ -z "$TO_INSTALL" ]; then
+        return;
+    fi
 
     echo "Installing packaged extensions: ${TO_INSTALL}"
     apt update
@@ -34,64 +47,39 @@ function enable_static_extension {
     local PHP=$1
     local EXTENSION=$2
 
-    echo "Enabling ${EXTENSION} extension"
+    echo "Enabling \"${EXTENSION}\" extension"
     phpenmod -v "${PHP}" -s ALL "${EXTENSION}"
 }
 
-function enable_sqlsrv {
-    local __result=$1
-    local PHP=$2
-    local -a EXTENSIONS=("${@:3}")
-    local TO_RETURN
-
-    if [[ ! ${PHP} =~ (7.3|7.4|8.0) ]];then
-        echo "Skipping enabling of sqlsrv extension; not supported on PHP < 7.3"
-    else
-        enable_static_extension "${PHP}" sqlsrv
-    fi
-
-    TO_RETURN=$(echo "${EXTENSIONS[@]}" | sed -E -e 's/php[0-9.]+-(pdo[_-]){0,1}sqlsrv/ /g' | sed -E -e 's/\s{2,}/ /g')
-    eval "$__result='$TO_RETURN'"
-}
-
-function enable_swoole {
-    local __result=$1
-    local PHP=$2
-    local -a EXTENSIONS=("${@:3}")
-    local TO_RETURN
-
-    if [[ ! ${PHP} =~ (7.3|7.4|8.0) ]];then
-        echo "Skipping enabling of swoole extension; not supported on PHP < 7.3"
-    else
-        enable_static_extension "${PHP}" swoole
-    fi
-
-    TO_RETURN=$(echo "${EXTENSIONS[@]}" | sed -E -e 's/php[0-9.]+-swoole/ /g' | sed -E -e 's/\s{2,}/ /g')
-    eval "$__result='$TO_RETURN'"
-}
-
 PHP=$1
-EXTENSIONS=("${@:2}")
-declare result ENABLE_FUNC
+declare -a EXTENSIONS=("${@:2}")
+# shellcheck disable=SC2196
+ENABLED_EXTENSIONS=$(php -m | tr '[:upper:]' '[:lower:]' | egrep -v '^[\[]' | grep -v 'zend opcache')
+EXTENSIONS_TO_INSTALL=()
 
 # Loop through known statically compiled/installed extensions, and enable them.
-# Each should update the result variable passed to it with a new list of
-# extensions.
-for EXTENSION in "${STATIC_EXTENSIONS[@]}";do
-    if match_in_array "${EXTENSION}" "${EXTENSIONS[@]}" ; then
-        ENABLE_FUNC="enable_${EXTENSION}"
-        $ENABLE_FUNC result "${PHP}" "${EXTENSIONS[*]}"
+# NOTE: when developing on MacOS, remove the quotes while implementing your changes and re-add the quotes afterwards.
+for EXTENSION in "${EXTENSIONS[@]}"; do
 
-		# Validate that we don't have just whitespace in the list
-        if [[ -z "${result// }" ]];then
-            EXTENSIONS=()
-        else
-            EXTENSIONS=("${result}")
-        fi
+    # Check if extension is already enabled
+    REGULAR_EXPRESSION=\\b${EXTENSION}\\b
+    if [[ "${ENABLED_EXTENSIONS}" =~ $REGULAR_EXPRESSION ]]; then
+        echo "Extension \"$EXTENSION\" is already enabled."
+        continue;
     fi
+
+    # Check if extension is installable via `phpenmod`
+    PATH_TO_EXTENSION_CONFIG="/etc/php/${PHP}/mods-available/${EXTENSION}.ini"
+
+    if [ -e "$PATH_TO_EXTENSION_CONFIG" ]; then
+        enable_static_extension "$PHP" "${EXTENSION}"
+        continue;
+    fi
+
+    EXTENSIONS_TO_INSTALL+=("$EXTENSION")
 done
 
-# If by now the extensions list is not empty, install packaged extensions.
-if [[ ${#EXTENSIONS[@]} != 0 ]];then
-    install_packaged_extensions "${EXTENSIONS[@]}"
+# If by now the extensions list is not empty, install missing extensions.
+if [[ ${#EXTENSIONS_TO_INSTALL[@]} != 0 ]]; then
+    install_extensions "$PHP" "${EXTENSIONS_TO_INSTALL[@]}"
 fi

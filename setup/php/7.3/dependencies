@@ -1,0 +1,14 @@
+php7.3-cli
+php7.3-bz2
+php7.3-curl
+php7.3-dev
+php7.3-fileinfo
+php7.3-intl
+php7.3-json
+php7.3-mbstring
+php7.3-phar
+php7.3-readline
+php7.3-sockets
+php7.3-xml
+php7.3-xsl
+php7.3-zip

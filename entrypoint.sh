@@ -143,7 +143,7 @@ if [ -x ".laminas-ci/pre-install.sh" ];then
     ./.laminas-ci/pre-install.sh testuser "${PWD}" "${JOB}"
 fi
 
-EXTENSIONS=$(echo "${JOB}" | jq -r ".extensions // [] | map(\"php${PHP}-\"+.) | join(\" \")")
+EXTENSIONS=$(echo "${JOB}" | jq -r ".extensions // [] | join(\" \")")
 INI=$(echo "${JOB}" | jq -r '.ini // [] | join("\n")')
 DEPS=$(echo "${JOB}" | jq -r '.dependencies // "locked"')
 IGNORE_PLATFORM_REQS_ON_8=$(echo "${JOB}" | jq -r 'if has("ignore_platform_reqs_8") | not then "yes" elif .ignore_platform_reqs_8 then "yes" else "no" end')
