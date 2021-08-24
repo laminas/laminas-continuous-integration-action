@@ -8,7 +8,10 @@ set -e
 
 function install_extensions {
     local PHP=$1
-    local -a EXTENSIONS=("${@:2}")
+    local -a EXTENSIONS=()
+    for EXTENSION in "${@:2}"; do
+      EXTENSIONS+=("$EXTENSION")
+    done
 
     case "$PHP" in
         8.1)
@@ -25,7 +28,11 @@ function install_extensions {
 
 function install_packaged_extensions {
     local PHP=$1
-    local -a EXTENSIONS=("${@:2}")
+    # shellcheck disable=SC2206
+    local -a EXTENSIONS=()
+    for EXTENSION in "${@:2}"; do
+      EXTENSIONS+=("$EXTENSION")
+    done
     local TO_INSTALL=""
 
     for EXTENSION in "${EXTENSIONS[@]}"; do
@@ -52,7 +59,8 @@ function enable_static_extension {
 }
 
 PHP=$1
-declare -a EXTENSIONS=("${@:2}")
+# shellcheck disable=SC2206
+declare -a EXTENSIONS=(${@:2})
 # shellcheck disable=SC2196
 ENABLED_EXTENSIONS=$(php -m | tr '[:upper:]' '[:lower:]' | egrep -v '^[\[]' | grep -v 'zend opcache')
 EXTENSIONS_TO_INSTALL=()
