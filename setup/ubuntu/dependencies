@@ -8,3 +8,4 @@ wget
 yamllint
 zip
 msodbcsql17
+xmlstarlet

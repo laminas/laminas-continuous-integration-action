@@ -183,6 +183,7 @@ if [[ "${COMMAND}" =~ phpunit ]];then
     echo "Setting up PHPUnit problem matcher"
     cp /etc/laminas-ci/problem-matcher/phpunit.json "$(pwd)/phpunit.json"
     echo "::add-matcher::phpunit.json"
+    /scripts/phpunit-deprecations-to-exception.sh
 fi
 
 if [[ "${COMMAND}" =~ markdownlint ]];then
