@@ -7,11 +7,13 @@ function help {
     echo ""
     echo "Run a QA JOB as specified in a JSON object."
     echo "The JSON should include each of the following elements:"
-    echo " - command:       command to run"
-    echo " - php:           the PHP version to use"
-    echo " - extensions:    a list of additional extensions to enable"
-    echo " - ini:           a list of php.ini directives"
-    echo " - dependencies:  the dependency set to run against (lowest, latest, locked)"
+    echo " - command:                         command to run"
+    echo " - php:                             the PHP version to use"
+    echo " - extensions:                      a list of additional extensions to enable"
+    echo " - ini:                             a list of php.ini directives"
+    echo " - dependencies:                    the dependency set to run against (lowest, latest, locked)"
+    echo " - ignore_php_platform_requirement: flag to enable/disable the PHP platform requirement when executing composer \`install\` or \`update\`"
+    echo " - additional_composer_arguments:   a list of composer arguments to be added when \`install\` or \`update\` is called."
     echo ""
 }
 
@@ -77,10 +79,11 @@ function checkout {
     fi
 }
 
-function composer_install {
+function composer_install_dependencies {
     local DEPS=$1
     local IGNORE_PHP_PLATFORM_REQUIREMENT=$2
-    local COMPOSER_ARGS="--ansi --no-interaction --no-progress --prefer-dist"
+    local ADDITIONAL_COMPOSER_ARGUMENTS=$3
+    local COMPOSER_ARGS="--ansi --no-interaction --no-progress --prefer-dist ${ADDITIONAL_COMPOSER_ARGUMENTS}"
     if [[ "${IGNORE_PHP_PLATFORM_REQUIREMENT}" == "true" ]];then
         COMPOSER_ARGS="${COMPOSER_ARGS} --ignore-platform-req=php"
     fi
@@ -99,7 +102,7 @@ function composer_install {
         *)
             echo "Installing dependencies as specified in lockfile via Composer"
             # shellcheck disable=SC2086
-            composer install ${COMPOSER_ARGS}
+            echo composer install ${COMPOSER_ARGS}
             ;;
     esac
 
@@ -148,6 +151,7 @@ INI=$(echo "${JOB}" | jq -r '.ini // [] | join("\n")')
 DEPS=$(echo "${JOB}" | jq -r '.dependencies // "locked"')
 IGNORE_PLATFORM_REQS_ON_8=$(echo "${JOB}" | jq -r 'if has("ignore_platform_reqs_8") | not then "yes" elif .ignore_platform_reqs_8 then "yes" else "no" end')
 IGNORE_PHP_PLATFORM_REQUIREMENT=$(echo "${JOB}" | jq -r '.ignore_php_platform_requirement')
+ADDITIONAL_COMPOSER_ARGUMENTS=$(echo "${JOB}" | jq -r '.additional_composer_arguments // [] | join("\n")')
 
 # Old matrix generation
 if [ "${IGNORE_PHP_PLATFORM_REQUIREMENT}" == "null" ]; then
@@ -177,7 +181,7 @@ if [[ "${GITHUB_TOKEN}" != "" ]];then
     composer config --global github-oauth.github.com "${GITHUB_TOKEN}"
 fi
 
-composer_install "${DEPS}" "${IGNORE_PHP_PLATFORM_REQUIREMENT}"
+composer_install_dependencies "${DEPS}" "${IGNORE_PHP_PLATFORM_REQUIREMENT}" "${ADDITIONAL_COMPOSER_ARGUMENTS}"
 
 if [[ "${COMMAND}" =~ phpunit ]];then
     echo "Setting up PHPUnit problem matcher"
