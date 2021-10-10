@@ -102,7 +102,7 @@ function composer_install_dependencies {
         *)
             echo "Installing dependencies as specified in lockfile via Composer"
             # shellcheck disable=SC2086
-            echo composer install ${COMPOSER_ARGS}
+            composer install ${COMPOSER_ARGS}
             ;;
     esac
 
