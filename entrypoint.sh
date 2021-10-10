@@ -7,11 +7,12 @@ function help {
     echo ""
     echo "Run a QA JOB as specified in a JSON object."
     echo "The JSON should include each of the following elements:"
-    echo " - command:       command to run"
-    echo " - php:           the PHP version to use"
-    echo " - extensions:    a list of additional extensions to enable"
-    echo " - ini:           a list of php.ini directives"
-    echo " - dependencies:  the dependency set to run against (lowest, latest, locked)"
+    echo " - command:                         command to run"
+    echo " - php:                             the PHP version to use"
+    echo " - extensions:                      a list of additional extensions to enable"
+    echo " - ini:                             a list of php.ini directives"
+    echo " - dependencies:                    the dependency set to run against (lowest, latest, locked)"
+    echo " - ignore_php_platform_requirement: flag to enable/disable the PHP platform requirement when executing composer \`install\` or \`update\`"
     echo ""
 }
 
@@ -177,7 +178,7 @@ if [[ "${GITHUB_TOKEN}" != "" ]];then
     composer config --global github-oauth.github.com "${GITHUB_TOKEN}"
 fi
 
-composer_install "${DEPS}" "${IGNORE_PHP_PLATFORM_REQUIREMENT}"
+composer_install "${DEPS}" "${IGNORE_PHP_PLATFORM_REQUIREMENT}" "${ADDITIONAL_COMPOSER_ARGUMENTS}"
 
 if [[ "${COMMAND}" =~ phpunit ]];then
     echo "Setting up PHPUnit problem matcher"
