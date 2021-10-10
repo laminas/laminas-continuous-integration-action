@@ -20,7 +20,10 @@ The JSON string should represent an object with the following information:
   "dependencies": "dependencies to test against; one of lowest, locked, latest",
   "ignore_platform_reqs_on_8": "(boolean; OPTIONAL; DEPRECATED) Whether or not to ignore platform requirements on PHP 8; defaults to true",
   "ignore_php_platform_requirement": "(boolean; OPTIONAL) Whether or not to ignore PHP platform requirement; defaults to false",
-  "command": "command to run to perform the check (empty in case you dont want to excecute any command)"
+  "command": "command to run to perform the check (empty in case you dont want to excecute any command)",
+  "additional_composer_arguments": [
+    "arguments which will be passed to `composer install` or `composer update`, passed as a list or as a list; e.g. --no-scripts"
+  ]
 }
 ```
 
