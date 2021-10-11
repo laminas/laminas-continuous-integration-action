@@ -7,6 +7,7 @@ php5.6-intl
 php5.6-json
 php5.6-mbstring
 php5.6-phar
+php5.6-phpdbg
 php5.6-readline
 php5.6-sockets
 php5.6-xml

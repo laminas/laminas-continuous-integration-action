@@ -137,6 +137,7 @@ echo "Marking PHP ${PHP} as configured default"
 update-alternatives --quiet --set php "/usr/bin/php${PHP}"
 update-alternatives --quiet --set php-config "/usr/bin/php-config${PHP}"
 update-alternatives --quiet --set phpize "/usr/bin/phpize${PHP}"
+update-alternatives --quiet --set phpdbg "/usr/bin/phpdbg${PHP}"
 
 checkout
 
