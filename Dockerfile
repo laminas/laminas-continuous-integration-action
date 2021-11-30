@@ -41,7 +41,7 @@ RUN for INSTALLER in /mods-install/*.sh;do ${INSTALLER} ; done
 
 RUN mkdir -p /etc/laminas-ci/problem-matcher \
     && cd /etc/laminas-ci/problem-matcher \
-    && wget https://raw.githubusercontent.com/shivammathur/setup-php/master/src/configs/phpunit.json \
+    && wget https://raw.githubusercontent.com/shivammathur/setup-php/master/src/configs/pm/phpunit.json \
     && wget -O markdownlint.json https://raw.githubusercontent.com/xt0rted/markdownlint-problem-matcher/main/.github/problem-matcher.json
 
 COPY etc/markdownlint.json /etc/laminas-ci/markdownlint.json
