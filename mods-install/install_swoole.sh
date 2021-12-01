@@ -2,27 +2,14 @@
 
 set -e
 
-SWOOLE_VERSION=4.7.0
+SWOOLE_PACKAGE_URL=https://uploads.mwop.net/laminas-ci/swoole-4.8.2-openswoole-4.8.0.tgz
+SWOOLE_PACKAGE=$(basename "${SWOOLE_PACKAGE_URL}")
 
-# Get swoole package ONCE
+# Download the pre-built extensions
 cd /tmp
-wget https://pecl.php.net/get/swoole-${SWOOLE_VERSION}.tgz
-tar xzf swoole-${SWOOLE_VERSION}.tgz
-
-# We only need to support currently supported PHP versions
-for PHP_VERSION in 7.3 7.4 8.0;do
-    cd /tmp/swoole-${SWOOLE_VERSION}
-    if [ -f Makefile ];then
-        make clean
-    fi
-    phpize${PHP_VERSION}
-    ./configure --enable-swoole --enable-sockets --with-php-config=php-config${PHP_VERSION}
-    make
-    make install
-
-    cp /mods-available/swoole.ini /etc/php/${PHP_VERSION}/mods-available/swoole.ini
-done
+wget "${SWOOLE_PACKAGE_URL}"
+cd /
+tar xzf "/tmp/${SWOOLE_PACKAGE}"
 
 # Cleanup
-rm -rf /tmp/swoole-${SWOOLE_VERSION}
-rm /tmp/swoole-${SWOOLE_VERSION}.tgz
+rm -rf "/tmp/${SWOOLE_PACKAGE}"
