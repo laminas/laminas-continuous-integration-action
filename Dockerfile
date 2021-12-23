@@ -7,6 +7,7 @@ LABEL "homepage"="http://github.com/laminas/laminas-continuous-integration-actio
 LABEL "maintainer"="https://github.com/laminas/technical-steering-committee/"
 
 ENV COMPOSER_HOME=/usr/local/share/composer
+ENV DEBIAN_FRONTEND=noninteractive
 
 COPY setup /setup
 # Base setup
