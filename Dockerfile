@@ -1,5 +1,3 @@
-FROM composer:2 AS composer
-
 FROM ubuntu:focal
 
 LABEL "repository"="http://github.com/laminas/laminas-continuous-integration-action"
@@ -47,7 +45,7 @@ RUN mkdir -p /etc/laminas-ci/problem-matcher \
 
 COPY etc/markdownlint.json /etc/laminas-ci/markdownlint.json
 
-COPY --from=composer /usr/bin/composer /usr/bin/composer
+COPY --from=composer:2.2.4 /usr/bin/composer /usr/bin/composer
 
 RUN mkdir -p /usr/local/share/composer \
     && composer global require staabm/annotate-pull-request-from-checkstyle \
