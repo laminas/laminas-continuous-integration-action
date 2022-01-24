@@ -1,0 +1,7 @@
+{
+  "name": "laminas-continuous-integration-action-markdownlint",
+  "description": "Frozen dependencies required for installing a stable \\`markdownlint\\` binary",
+  "dependencies": {
+    "markdownlint-cli2": "0.3.2"
+  }
+}

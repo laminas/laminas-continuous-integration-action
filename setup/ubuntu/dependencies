@@ -2,7 +2,7 @@ git
 jq
 libxml2-utils
 libzip-dev
-npm
+nodejs
 sudo
 wget
 yamllint
