@@ -223,7 +223,7 @@ RUN chmod +x /usr/local/bin/php-extensions-with-version.php
 # Copy Markdownlint installation to this stage
 COPY --from=install-markdownlint /markdownlint /markdownlint
 RUN ln -s /markdownlint/node_modules/.bin/markdownlint-cli2 /usr/local/bin/markdownlint
-COPY --from=install-markdownlint /markdownlint/markdownlint.json /etc/markdownlint.json
+COPY --from=install-markdownlint /markdownlint/markdownlint.json /etc/laminas-ci/markdownlint.json
 
 
 # Copy staabm/annotate-pull-request-from-checkstyle to this stage
