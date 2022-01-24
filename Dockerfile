@@ -1,5 +1,6 @@
-# Aliasing base image, so we can change just this, when needing to upgrade or pull base layers
+# Aliasing base images, so we can change just this, when needing to upgrade or pull base layers
 FROM ubuntu:20.04 AS base-distro
+FROM composer:2.2.4 AS composer
 
 
 FROM base-distro AS install-markdownlint
@@ -19,12 +20,23 @@ COPY setup/markdownlint/dummy-ok-markdown-test-file.md \
     setup/markdownlint/dummy-ko-markdown-test-file.md \
     /test-files/
 
-# Markdownlint
 RUN cd /markdownlint \
     && npm ci \
     # Smoke-testing the installation, just making sure it works as expected - should pass first file, fail on second
     && node_modules/.bin/markdownlint-cli2 /test-files/dummy-ok-markdown-test-file.md \
     && if node_modules/.bin/markdownlint-cli2 /test-files/dummy-ko-markdown-test-file.md; then exit 1; else exit 0; fi
+
+
+FROM composer AS staabm-annotate-pull-request-from-checkstyle
+
+COPY setup/staabm-annotate-pull-request-from-checkstyle/composer.json \
+    setup/staabm-annotate-pull-request-from-checkstyle/composer.lock \
+    /staabm-annotate-pull-request-from-checkstyle/
+
+RUN cd /staabm-annotate-pull-request-from-checkstyle \
+    && composer install \
+        --no-dev \
+        --classmap-authoritative
 
 
 FROM base-distro
@@ -70,12 +82,6 @@ RUN mkdir -p /etc/laminas-ci/problem-matcher \
 
 COPY etc/markdownlint.json /etc/laminas-ci/markdownlint.json
 
-COPY --from=composer:2.2.4 /usr/bin/composer /usr/bin/composer
-
-RUN mkdir -p /usr/local/share/composer \
-    && composer global require staabm/annotate-pull-request-from-checkstyle \
-    && ln -s /usr/local/share/composer/vendor/bin/cs2pr /usr/local/bin/cs2pr
-
 COPY scripts /scripts
 RUN chmod a+x /scripts/*
 
@@ -91,6 +97,16 @@ RUN ln -s /markdownlint/node_modules/.bin/markdownlint-cli2 /usr/local/bin/markd
 # We use https://github.com/xt0rted/markdownlint-problem-matcher/blob/caf6b376527f8a8ac3b8ed6746989e51a6e560c8/.github/problem-matcher.json
 # to match the output of Markdownlint to GitHub Actions annotations (https://docs.github.com/en/actions/using-workflows/workflow-commands-for-github-actions#setting-a-warning-message)
 COPY setup/markdownlint/markdownlint.json /etc/laminas-ci/problem-matcher
+
+
+# Copy staabm/annotate-pull-request-from-checkstyle to this stage
+COPY --from=staabm-annotate-pull-request-from-checkstyle /staabm-annotate-pull-request-from-checkstyle /staabm-annotate-pull-request-from-checkstyle
+RUN ln -s /staabm-annotate-pull-request-from-checkstyle/vendor/bin/cs2pr /usr/local/bin/cs2pr
+
+
+# Add composer binary to the image
+COPY --from=composer /usr/bin/composer /usr/bin/composer
+
 
 RUN useradd -ms /bin/bash testuser
 
