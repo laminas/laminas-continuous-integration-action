@@ -28,6 +28,54 @@ RUN cd /markdownlint \
     && if node_modules/.bin/markdownlint-cli2 /test-files/dummy-ko-markdown-test-file.md; then exit 1; else exit 0; fi
 
 
+FROM base-distro AS install-openswoole
+
+RUN export DEBIAN_FRONTEND=noninteractive \
+    && apt update \
+    && apt upgrade -y \
+    && apt install -y --no-install-recommends \
+        ca-certificates \
+        g++ \
+        git \
+        make \
+        software-properties-common \
+    && add-apt-repository -y ppa:ondrej/php \
+    && apt install -y --no-install-recommends \
+        php7.3-dev \
+        php7.4-dev \
+        php8.0-dev \
+        php8.1-dev \
+    && apt clean
+
+
+RUN git clone --single-branch --depth=1 -b v4.9.1 https://github.com/openswoole/swoole-src.git \
+  && mkdir /swoole \
+  && cd swoole-src \
+  \
+  && phpize7.3 \
+  && ./configure \
+  && make \
+  && cp modules/openswoole.so /swoole/openswoole-7.3.so \
+  \
+  && make clean \
+  && phpize7.4 \
+  && ./configure \
+  && make \
+  && cp modules/openswoole.so /swoole/openswoole-7.4.so \
+  \
+  && make clean \
+  && phpize8.0 \
+  && ./configure \
+  && make \
+  && cp modules/openswoole.so /swoole/openswoole-8.0.so \
+  \
+  && make clean \
+  && phpize8.1 \
+  && ./configure \
+  && make \
+  && cp modules/openswoole.so /swoole/openswoole-8.1.so
+
+
 FROM composer AS staabm-annotate-pull-request-from-checkstyle
 
 COPY setup/staabm-annotate-pull-request-from-checkstyle/composer.json \
@@ -210,7 +258,9 @@ RUN apt update \
 # Build/install static modules that do not have packages
 COPY mods-available /mods-available
 COPY mods-install /mods-install
-RUN for INSTALLER in /mods-install/*.sh;do ${INSTALLER} ; done
+RUN /mods-install/install_sqlsrv.sh
+RUN /mods-install/install_swoole.sh
+#RUN for INSTALLER in /mods-install/*.sh;do ${INSTALLER} ; done
 
 COPY scripts /scripts
 RUN chmod a+x /scripts/*
