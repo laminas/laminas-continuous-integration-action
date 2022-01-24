@@ -13,7 +13,7 @@ RUN export DEBIAN_FRONTEND=noninteractive \
 
 COPY setup/markdownlint/package.json \
     setup/markdownlint/package-lock.json \
-    setup/markdownlint/problem-matcher.json \
+    setup/markdownlint/markdownlint.json \
     /markdownlint/
 
 COPY setup/markdownlint/dummy-ok-markdown-test-file.md \
@@ -76,12 +76,6 @@ COPY mods-available /mods-available
 COPY mods-install /mods-install
 RUN for INSTALLER in /mods-install/*.sh;do ${INSTALLER} ; done
 
-RUN mkdir -p /etc/laminas-ci/problem-matcher \
-    && cd /etc/laminas-ci/problem-matcher \
-    && wget https://raw.githubusercontent.com/shivammathur/setup-php/master/src/configs/pm/phpunit.json
-
-COPY etc/markdownlint.json /etc/laminas-ci/markdownlint.json
-
 COPY scripts /scripts
 RUN chmod a+x /scripts/*
 
@@ -93,10 +87,7 @@ RUN chmod +x /usr/local/bin/php-extensions-with-version.php
 # Copy Markdownlint installation to this stage
 COPY --from=install-markdownlint /markdownlint /markdownlint
 RUN ln -s /markdownlint/node_modules/.bin/markdownlint-cli2 /usr/local/bin/markdownlint
-
-# We use https://github.com/xt0rted/markdownlint-problem-matcher/blob/caf6b376527f8a8ac3b8ed6746989e51a6e560c8/.github/problem-matcher.json
-# to match the output of Markdownlint to GitHub Actions annotations (https://docs.github.com/en/actions/using-workflows/workflow-commands-for-github-actions#setting-a-warning-message)
-COPY setup/markdownlint/markdownlint.json /etc/laminas-ci/problem-matcher
+COPY --from=install-markdownlint /markdownlint/markdownlint.json /etc/markdownlint.json
 
 
 # Copy staabm/annotate-pull-request-from-checkstyle to this stage
@@ -106,6 +97,14 @@ RUN ln -s /staabm-annotate-pull-request-from-checkstyle/vendor/bin/cs2pr /usr/lo
 
 # Add composer binary to the image
 COPY --from=composer /usr/bin/composer /usr/bin/composer
+
+
+# We use https://github.com/xt0rted/markdownlint-problem-matcher/blob/caf6b376527f8a8ac3b8ed6746989e51a6e560c8/.github/problem-matcher.json
+# and https://github.com/shivammathur/setup-php/blob/57db6baebbe30a3126c7a03aa0e3267fa7872d96/src/configs/pm/phpunit.json
+# to match the output of Markdownlint and PHPUnit to GitHub Actions
+# annotations (https://docs.github.com/en/actions/using-workflows/workflow-commands-for-github-actions#setting-a-warning-message)
+COPY setup/markdownlint/problem-matcher.json /etc/laminas-ci/problem-matcher/markdownlint.json
+COPY setup/phpunit/problem-matcher.json /etc/laminas-ci/problem-matcher/phpunit.json
 
 
 RUN useradd -ms /bin/bash testuser
