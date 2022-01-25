@@ -11,16 +11,6 @@ jobs:
     env:
       DOCKER_USER: ${{ secrets.CONTAINER_USERNAME }}
     steps:
-      - name: Compile tag list
-        id: tags
-        run: |
-          TAG=${GITHUB_REF/refs\/tags\//}
-          PREFIX=ghcr.io/laminas/laminas-continuous-integration
-          MAJOR="${PREFIX}:$(echo ${TAG} | cut -d. -f1)"
-          MINOR="${MAJOR}.$(echo ${TAG} | cut -d. -f2)"
-          PATCH="${PREFIX}:${TAG}"
-          echo "::set-output name=tags::[\"${MAJOR}\",\"${MINOR}\",\"${PATCH}\"]"
-
       - name: Checkout
         uses: actions/checkout@v2
 
@@ -37,6 +27,18 @@ jobs:
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Docker meta
+        id: docker_meta
+        uses: docker/metadata-action@v3
+        with:
+          images: ghcr.io/laminas/laminas-continuous-integration
+          tags: |
+            type=semver,pattern={{version}}
+            type=ref,event=branch
+            type=ref,event=pr
+          flavor: |
+            latest=false
+
       - name: Build image. Push for release
         uses: docker/build-push-action@v2
         with:
@@ -45,6 +47,8 @@ jobs:
           # target: multi-stage build target name
           pull: true
           push: ${{ github.event_name == 'release' }}
-          tags: ${{ join(fromJSON(steps.tags.outputs.tags), ',') }}
+          tags: |
+            ${{ steps.docker_meta.outputs.tags }}
+          labels: ${{ steps.docker_meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
