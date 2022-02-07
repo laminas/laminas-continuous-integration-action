@@ -88,14 +88,19 @@ function composer_install_dependencies {
         COMPOSER_ARGS="${COMPOSER_ARGS} --ignore-platform-req=php"
     fi
 
+
     case $DEPS in
         lowest)
             echo "Installing lowest supported dependencies via Composer"
+            # Disable platform.php, if set
+            composer config --unset platform.php
             # shellcheck disable=SC2086
             composer update ${COMPOSER_ARGS} --prefer-lowest
             ;;
         latest)
             echo "Installing latest supported dependencies via Composer"
+            # Disable platform.php, if set
+            composer config --unset platform.php
             # shellcheck disable=SC2086
             composer update ${COMPOSER_ARGS}
             ;;
