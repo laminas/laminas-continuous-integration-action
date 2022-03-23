@@ -5,7 +5,7 @@ set -e
 cd tmp
 
 # Download extension versions from MS
-curl -L https://github.com/microsoft/msphpsql/releases/download/v5.10.0/Ubuntu2004-7.3.tar | tar xf - --strip-components=1 Ubuntu2004-7.3/php_pdo_sqlsrv_73_nts.so Ubuntu2004-7.3/php_sqlsrv_73_nts.so
+curl -L https://github.com/microsoft/msphpsql/releases/download/v5.9.0/Ubuntu2004-7.3.tar | tar xf - --strip-components=1 Ubuntu2004-7.3/php_pdo_sqlsrv_73_nts.so Ubuntu2004-7.3/php_sqlsrv_73_nts.so
 curl -L https://github.com/microsoft/msphpsql/releases/download/v5.10.0/Ubuntu2004-7.4.tar | tar xf - --strip-components=1 Ubuntu2004-7.4/php_pdo_sqlsrv_74_nts.so Ubuntu2004-7.4/php_sqlsrv_74_nts.so
 curl -L https://github.com/microsoft/msphpsql/releases/download/v5.10.0/Ubuntu2004-8.0.tar | tar xf - --strip-components=1 Ubuntu2004-8.0/php_pdo_sqlsrv_80_nts.so Ubuntu2004-8.0/php_sqlsrv_80_nts.so
 curl -L https://github.com/microsoft/msphpsql/releases/download/v5.10.0/Ubuntu2004-8.1.tar | tar xf - --strip-components=1 Ubuntu2004-8.1/php_pdo_sqlsrv_81_nts.so Ubuntu2004-8.1/php_sqlsrv_81_nts.so

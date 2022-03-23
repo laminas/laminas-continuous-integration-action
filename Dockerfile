@@ -210,7 +210,7 @@ RUN apt update \
 # Build/install static modules that do not have packages
 COPY mods-available /mods-available
 COPY mods-install /mods-install
-RUN for INSTALLER in /mods-install/*.sh;do ${INSTALLER} ; done
+RUN set -e; for INSTALLER in /mods-install/*.sh; do ${INSTALLER} ; done
 
 COPY scripts /scripts
 RUN chmod a+x /scripts/*
