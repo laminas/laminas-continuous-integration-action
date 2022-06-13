@@ -2,7 +2,7 @@
 
 set -e
 
-SWOOLE_PACKAGE_URL=https://uploads.mwop.net/laminas-ci/swoole-4.8.2-openswoole-4.8.0.tgz
+SWOOLE_PACKAGE_URL=https://github.com/weierophinney/laminas-ci-swoole-builder/releases/download/0.1.0/swoole-4.8.2-openswoole-4.8.0.tgz
 SWOOLE_PACKAGE=$(basename "${SWOOLE_PACKAGE_URL}")
 
 # Download the pre-built extensions
