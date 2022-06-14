@@ -206,8 +206,6 @@ RUN apt update \
     && apt autoremove -y \
     && apt clean
 
-RUN git config --global --add safe.directory '*'
-
 # Build/install static modules that do not have packages
 COPY mods-available /mods-available
 COPY mods-install /mods-install
@@ -244,6 +242,7 @@ COPY setup/markdownlint/problem-matcher.json /etc/laminas-ci/problem-matcher/mar
 COPY setup/phpunit/problem-matcher.json /etc/laminas-ci/problem-matcher/phpunit.json
 
 
-RUN useradd -ms /bin/bash testuser
+RUN useradd -ms /bin/bash testuser \
+    && sudo -u testuser git config --global --add safe.directory '*'
 
 ENTRYPOINT ["entrypoint.sh"]
