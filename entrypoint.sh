@@ -144,6 +144,8 @@ update-alternatives --quiet --set php-config "/usr/bin/php-config${PHP}"
 update-alternatives --quiet --set phpize "/usr/bin/phpize${PHP}"
 update-alternatives --quiet --set phpdbg "/usr/bin/phpdbg${PHP}"
 
+# Marks the working directory as safe for the current user prior to checkout
+git config --global --add safe.directory '*'
 checkout
 
 # Is there a pre-install script available?
