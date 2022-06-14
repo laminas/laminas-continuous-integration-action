@@ -206,6 +206,7 @@ RUN apt update \
     && apt autoremove -y \
     && apt clean
 
+RUN git config --global --add safe.directory '*'
 
 # Build/install static modules that do not have packages
 COPY mods-available /mods-available
