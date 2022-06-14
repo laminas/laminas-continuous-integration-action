@@ -242,7 +242,6 @@ COPY setup/markdownlint/problem-matcher.json /etc/laminas-ci/problem-matcher/mar
 COPY setup/phpunit/problem-matcher.json /etc/laminas-ci/problem-matcher/phpunit.json
 
 
-RUN useradd -ms /bin/bash testuser \
-    && sudo -u testuser git config --global --add safe.directory '*'
+RUN useradd -ms /bin/bash testuser
 
 ENTRYPOINT ["entrypoint.sh"]
