@@ -1,6 +1,7 @@
 #!/bin/bash
 
 set -e
+set -o pipefail
 
 function help {
     echo "$0 <JSON>"
@@ -14,6 +15,7 @@ function help {
     echo " - dependencies:                    the dependency set to run against (lowest, latest, locked)"
     echo " - ignore_php_platform_requirement: flag to enable/disable the PHP platform requirement when executing composer \`install\` or \`update\`"
     echo " - additional_composer_arguments:   a list of composer arguments to be added when \`install\` or \`update\` is called."
+    echo " - gatekeeper_commands:             a list of commands to run prior the real command"
     echo ""
 }
 
@@ -138,6 +140,9 @@ if [[ "${PHP}" == "" ]];then
     exit 1
 fi
 
+declare -a GATEKEEPER_COMMANDS=()
+readarray -t GATEKEEPER_COMMANDS="$(echo "${JOB}" | jq -rc '(.gatekeeper_commands // [])[]' )"
+
 echo "Marking PHP ${PHP} as configured default"
 update-alternatives --quiet --set php "/usr/bin/php${PHP}"
 update-alternatives --quiet --set php-config "/usr/bin/php-config${PHP}"
@@ -215,6 +220,11 @@ if [ -x ".laminas-ci/pre-run.sh" ];then
     echo "Executing pre-run commands from .laminas-ci/pre-run.sh"
     ./.laminas-ci/pre-run.sh testuser "${PWD}" "${JOB}"
 fi
+
+# Execute gatekeeper commands before executing the CI command
+for GATEKEEPER_COMMAND in "${GATEKEEPER_COMMANDS[@]}"; do
+  sudo --preserve-env --set-home -u testuser /bin/bash -c "${GATEKEEPER_COMMAND}"
+done
 
 # Disable exit-on-non-zero flag so we can run post-commands
 set +e
