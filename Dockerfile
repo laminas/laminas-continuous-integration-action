@@ -1,5 +1,5 @@
 # Aliasing base images, so we can change just this, when needing to upgrade or pull base layers
-FROM ubuntu:20.04 AS base-distro
+FROM ubuntu:22.04 AS base-distro
 FROM composer:2.3.9 AS composer
 
 
