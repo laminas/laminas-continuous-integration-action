@@ -15,7 +15,7 @@ function help {
     echo " - dependencies:                    the dependency set to run against (lowest, latest, locked)"
     echo " - ignore_php_platform_requirement: flag to enable/disable the PHP platform requirement when executing composer \`install\` or \`update\`"
     echo " - additional_composer_arguments:   a list of composer arguments to be added when \`install\` or \`update\` is called."
-    echo " - gatekeeper_commands:             a list of commands to run prior the real command"
+    echo " - before_script:                   a list of commands to run before the real command"
     echo ""
 }
 
@@ -140,8 +140,8 @@ if [[ "${PHP}" == "" ]];then
     exit 1
 fi
 
-declare -a GATEKEEPER_COMMANDS=()
-readarray -t GATEKEEPER_COMMANDS="$(echo "${JOB}" | jq -rc '(.gatekeeper_commands // [])[]' )"
+declare -a BEFORE_SCRIPT=()
+readarray -t BEFORE_SCRIPT="$(echo "${JOB}" | jq -rc '(.before_script // [])[]' )"
 
 echo "Marking PHP ${PHP} as configured default"
 update-alternatives --quiet --set php "/usr/bin/php${PHP}"
@@ -221,9 +221,9 @@ if [ -x ".laminas-ci/pre-run.sh" ];then
     ./.laminas-ci/pre-run.sh testuser "${PWD}" "${JOB}"
 fi
 
-# Execute gatekeeper commands before executing the CI command
-for GATEKEEPER_COMMAND in "${GATEKEEPER_COMMANDS[@]}"; do
-  sudo --preserve-env --set-home -u testuser /bin/bash -c "${GATEKEEPER_COMMAND}"
+for BEFORE_SCRIPT_COMMAND in "${BEFORE_SCRIPT[@]}"; do
+  echo "Running before_script: ${BEFORE_SCRIPT_COMMAND}"
+  sudo --preserve-env --set-home -u testuser /bin/bash -c "${BEFORE_SCRIPT_COMMAND}"
 done
 
 # Disable exit-on-non-zero flag so we can run post-commands
