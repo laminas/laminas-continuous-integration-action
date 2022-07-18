@@ -44,6 +44,9 @@ The JSON string should represent an object with the following information:
     "tool configuration linting",
     "tool specific setting overrides",
     "specific composer dependency to be installed prior executing command"
+  ],
+  "after_script": [
+    "post process tool result"
   ]
 }
 ```
@@ -126,6 +129,9 @@ The `.laminas-ci/post-run.sh` command will receive these arguments:
 - `$2`: the user the QA command will run under
 - `$3`: the WORKDIR path
 - `$4`: the `$JOB` passed to the entrypoint (see above)
+
+It is also possible to pass `after_script` with a list of commands via the `$JOB` variable. 
+`$STATUS` is a variable containing the exit code of the command and can be used in the commands listed in `after_script`. 
 
 #### Parsing the $JOB
 

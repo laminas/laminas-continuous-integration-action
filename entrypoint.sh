@@ -16,6 +16,7 @@ function help {
     echo " - ignore_php_platform_requirement: flag to enable/disable the PHP platform requirement when executing composer \`install\` or \`update\`"
     echo " - additional_composer_arguments:   a list of composer arguments to be added when \`install\` or \`update\` is called."
     echo " - before_script:                   a list of commands to run before the real command"
+    echo " - after_script:                    a list of commands to run after the real command"
     echo ""
 }
 
@@ -143,6 +144,10 @@ fi
 declare -a BEFORE_SCRIPT=()
 readarray -t BEFORE_SCRIPT="$(echo "${JOB}" | jq -rc '(.before_script // [])[]' )"
 
+declare -a AFTER_SCRIPT=()
+readarray -t AFTER_SCRIPT="$(echo "${JOB}" | jq -rc '(.after_script // [])[]' )"
+
+
 echo "Marking PHP ${PHP} as configured default"
 update-alternatives --quiet --set php "/usr/bin/php${PHP}"
 update-alternatives --quiet --set php-config "/usr/bin/php-config${PHP}"
@@ -240,5 +245,10 @@ if [ -x ".laminas-ci/post-run.sh" ];then
     echo "Executing post-run commands from .laminas-ci/post-run.sh"
     ./.laminas-ci/post-run.sh "${STATUS}" testuser "${PWD}" "${JOB}"
 fi
+
+for AFTER_SCRIPT_COMMAND in "${AFTER_SCRIPT[@]}"; do
+  echo "Running before_script: ${AFTER_SCRIPT_COMMAND}"
+  sudo --preserve-env --set-home -u testuser /bin/bash -c "${AFTER_SCRIPT_COMMAND}"
+done
 
 exit ${STATUS}
