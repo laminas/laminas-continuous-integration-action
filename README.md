@@ -118,6 +118,8 @@ The `.laminas-ci/pre-run.sh` command runs immediately prior to the QA command, a
 - `$2`: the WORKDIR path
 - `$3`: the `$JOB` passed to the entrypoint (see above)
 
+It is also possible to pass `before_script` with a list of commands via the `$JOB` variable.
+
 The `.laminas-ci/post-run.sh` command will receive these arguments:
 
 - `$1`: the exit status of the QA command
