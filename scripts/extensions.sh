@@ -6,6 +6,8 @@
 
 set -e
 
+SWOOLE_PACKAGE_URL="https://github.com/weierophinney/laminas-ci-swoole-builder/releases/download/0.2.0/php%s-%s.tgz"
+
 function install_extensions {
     local PHP=$1
     local -a EXTENSIONS=()
@@ -35,11 +37,49 @@ function install_packaged_extensions {
       EXTENSIONS+=("$EXTENSION")
     done
     local TO_INSTALL=""
+    local swoole=""
+    local openswoole=""
+    local package_url
+    local package
 
     for EXTENSION in "${EXTENSIONS[@]}"; do
-        # Converting extension name to package name, e.g. php8.0-redis
-        TO_INSTALL="${TO_INSTALL}php${PHP}-$EXTENSION "
+        if [[ "${EXTENSION}" =~ openswoole ]]; then
+            openswoole=openswoole
+        elif [[ "${EXTENSION}" =~ swoole ]]; then
+            swoole=swoole
+        else
+            # Converting extension name to package name, e.g. php8.0-redis
+            TO_INSTALL="${TO_INSTALL}php${PHP}-$EXTENSION "
+        fi
     done
+
+    if [[ "${openswoole}" == "openswoole" ]]; then
+        # shellcheck disable=SC2059
+        package_url=$(printf "${SWOOLE_PACKAGE_URL}" "${PHP}" "openswoole")
+        package=$(basename "${package_url}")
+
+        echo "Fetching openswoole extension package for PHP ${PHP}"
+        cd /tmp
+        wget "${package_url}"
+        cd /
+        tar xzf "/tmp/${package}"
+        rm -rf "/tmp/${package}"
+        phpenmod -v "${PHP}" -s ALL openswoole
+    fi
+
+    if [[ "${swoole}" == "swoole" ]]; then
+        # shellcheck disable=SC2059
+        package_url=$(printf "${SWOOLE_PACKAGE_URL}" "${PHP}" "swoole")
+        package=$(basename "${package_url}")
+
+        echo "Fetching openswoole extension package for PHP ${PHP}"
+        cd /tmp
+        wget "${package_url}"
+        cd /
+        tar xzf "/tmp/${package}"
+        rm -rf "/tmp/${package}"
+        phpenmod -v "${PHP}" -s ALL swoole
+    fi
 
     if [ -z "$TO_INSTALL" ]; then
         return;
