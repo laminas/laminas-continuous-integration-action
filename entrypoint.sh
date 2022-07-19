@@ -1,6 +1,7 @@
 #!/bin/bash
 
 set -e
+set -o pipefail
 
 function help {
     echo "$0 <JSON>"
@@ -14,6 +15,7 @@ function help {
     echo " - dependencies:                    the dependency set to run against (lowest, latest, locked)"
     echo " - ignore_php_platform_requirement: flag to enable/disable the PHP platform requirement when executing composer \`install\` or \`update\`"
     echo " - additional_composer_arguments:   a list of composer arguments to be added when \`install\` or \`update\` is called."
+    echo " - before_script:                   a list of commands to run before the real command"
     echo ""
 }
 
@@ -138,6 +140,9 @@ if [[ "${PHP}" == "" ]];then
     exit 1
 fi
 
+declare -a BEFORE_SCRIPT=()
+readarray -t BEFORE_SCRIPT="$(echo "${JOB}" | jq -rc '(.before_script // [])[]' )"
+
 echo "Marking PHP ${PHP} as configured default"
 update-alternatives --quiet --set php "/usr/bin/php${PHP}"
 update-alternatives --quiet --set php-config "/usr/bin/php-config${PHP}"
@@ -215,6 +220,11 @@ if [ -x ".laminas-ci/pre-run.sh" ];then
     echo "Executing pre-run commands from .laminas-ci/pre-run.sh"
     ./.laminas-ci/pre-run.sh testuser "${PWD}" "${JOB}"
 fi
+
+for BEFORE_SCRIPT_COMMAND in "${BEFORE_SCRIPT[@]}"; do
+  echo "Running before_script: ${BEFORE_SCRIPT_COMMAND}"
+  sudo --preserve-env --set-home -u testuser /bin/bash -c "${BEFORE_SCRIPT_COMMAND}"
+done
 
 # Disable exit-on-non-zero flag so we can run post-commands
 set +e

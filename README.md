@@ -39,6 +39,11 @@ The JSON string should represent an object with the following information:
   "command": "command to run to perform the check (empty in case you dont want to excecute any command)",
   "additional_composer_arguments": [
     "arguments which will be passed to `composer install` or `composer update`, passed as a list or as a list; e.g. --no-scripts"
+  ],
+  "before_script": [
+    "tool configuration linting",
+    "tool specific setting overrides",
+    "specific composer dependency to be installed prior executing command"
   ]
 }
 ```
@@ -112,6 +117,8 @@ The `.laminas-ci/pre-run.sh` command runs immediately prior to the QA command, a
 - `$1`: the user the QA command will run under
 - `$2`: the WORKDIR path
 - `$3`: the `$JOB` passed to the entrypoint (see above)
+
+It is also possible to pass `before_script` with a list of commands via the `$JOB` variable.
 
 The `.laminas-ci/post-run.sh` command will receive these arguments:
 
@@ -219,6 +226,7 @@ The container the action provides and consumes builds off the ubuntu:focal image
 - 7.3
 - 7.4
 - 8.0
+- 8.1
 
 Each provides the following extensions by default:
 
