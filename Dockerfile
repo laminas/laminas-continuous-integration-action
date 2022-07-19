@@ -74,6 +74,8 @@ RUN apt update \
         zip \
         msodbcsql17 \
         \
+        php-pear \
+        \
         php5.6-bz2 \
         php5.6-cli \
         php5.6-curl \
