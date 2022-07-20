@@ -29,6 +29,25 @@ function install_extensions {
     esac
 }
 
+function install_swoole_extension {
+    local PHP=$1
+    local extension=$2
+    local package_url
+    local package
+
+    # shellcheck disable=SC2059
+    package_url=$(printf "${SWOOLE_PACKAGE_URL}" "${PHP}" "${extension}")
+    package=$(basename "${package_url}")
+
+    echo "Fetching ${extension} extension package for PHP ${PHP}"
+    cd /tmp
+    wget "${package_url}"
+    cd /
+    tar xzf "/tmp/${package}"
+    rm -rf "/tmp/${package}"
+    phpenmod -v "${PHP}" -s ALL "${extension}"
+}
+
 function install_packaged_extensions {
     local PHP=$1
     # shellcheck disable=SC2206
@@ -37,49 +56,17 @@ function install_packaged_extensions {
       EXTENSIONS+=("$EXTENSION")
     done
     local TO_INSTALL=""
-    local swoole=""
-    local openswoole=""
-    local package_url
-    local package
 
     for EXTENSION in "${EXTENSIONS[@]}"; do
         if [[ "${EXTENSION}" =~ openswoole ]]; then
-            openswoole=openswoole
+            install_swoole_extension "${PHP}" "openswoole"
         elif [[ "${EXTENSION}" =~ swoole ]]; then
-            swoole=swoole
+            install_swoole_extension "${PHP}" "swoole"
         else
             # Converting extension name to package name, e.g. php8.0-redis
             TO_INSTALL="${TO_INSTALL}php${PHP}-$EXTENSION "
         fi
     done
-
-    if [[ "${openswoole}" == "openswoole" ]]; then
-        # shellcheck disable=SC2059
-        package_url=$(printf "${SWOOLE_PACKAGE_URL}" "${PHP}" "openswoole")
-        package=$(basename "${package_url}")
-
-        echo "Fetching openswoole extension package for PHP ${PHP}"
-        cd /tmp
-        wget "${package_url}"
-        cd /
-        tar xzf "/tmp/${package}"
-        rm -rf "/tmp/${package}"
-        phpenmod -v "${PHP}" -s ALL openswoole
-    fi
-
-    if [[ "${swoole}" == "swoole" ]]; then
-        # shellcheck disable=SC2059
-        package_url=$(printf "${SWOOLE_PACKAGE_URL}" "${PHP}" "swoole")
-        package=$(basename "${package_url}")
-
-        echo "Fetching openswoole extension package for PHP ${PHP}"
-        cd /tmp
-        wget "${package_url}"
-        cd /
-        tar xzf "/tmp/${package}"
-        rm -rf "/tmp/${package}"
-        phpenmod -v "${PHP}" -s ALL swoole
-    fi
 
     if [ -z "$TO_INSTALL" ]; then
         return;
