@@ -142,10 +142,16 @@ if [[ "${PHP}" == "" ]];then
 fi
 
 declare -a BEFORE_SCRIPT=()
-readarray -t BEFORE_SCRIPT="$(echo "${JOB}" | jq -rc '(.before_script // [])[]' )"
+BEFORE_SCRIPT_STRING="$(echo "${JOB}" | jq -rc '(.before_script // [])[]' | tr -d '\n')"
+if [[ "${BEFORE_SCRIPT_STRING}" != "" ]]; then
+    readarray -t BEFORE_SCRIPT="${BEFORE_SCRIPT_STRING}"
+fi
 
 declare -a AFTER_SCRIPT=()
-readarray -t AFTER_SCRIPT="$(echo "${JOB}" | jq -rc '(.after_script // [])[]' )"
+AFTER_SCRIPT_STRING="$(echo "${JOB}" | jq -rc '(.after_script // [])[]' | tr -d '\n')"
+if [[ "${AFTER_SCRIPT_STRING}" != "" ]]; then
+    readarray -t AFTER_SCRIPT="${AFTER_SCRIPT_STRING}"
+fi
 
 
 echo "Marking PHP ${PHP} as configured default"
