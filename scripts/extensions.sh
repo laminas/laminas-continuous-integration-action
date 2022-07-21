@@ -6,6 +6,8 @@
 
 set -e
 
+SWOOLE_PACKAGE_URL="https://github.com/weierophinney/laminas-ci-swoole-builder/releases/download/0.2.0/php%s-%s.tgz"
+
 function install_extensions {
     local PHP=$1
     local -a EXTENSIONS=()
@@ -27,6 +29,25 @@ function install_extensions {
     esac
 }
 
+function install_swoole_extension {
+    local PHP=$1
+    local extension=$2
+    local package_url
+    local package
+
+    # shellcheck disable=SC2059
+    package_url=$(printf "${SWOOLE_PACKAGE_URL}" "${PHP}" "${extension}")
+    package=$(basename "${package_url}")
+
+    echo "Fetching ${extension} extension package for PHP ${PHP}"
+    cd /tmp
+    wget "${package_url}"
+    cd /
+    tar xzf "/tmp/${package}"
+    rm -rf "/tmp/${package}"
+    phpenmod -v "${PHP}" -s ALL "${extension}"
+}
+
 function install_packaged_extensions {
     local PHP=$1
     # shellcheck disable=SC2206
@@ -37,8 +58,14 @@ function install_packaged_extensions {
     local TO_INSTALL=""
 
     for EXTENSION in "${EXTENSIONS[@]}"; do
-        # Converting extension name to package name, e.g. php8.0-redis
-        TO_INSTALL="${TO_INSTALL}php${PHP}-$EXTENSION "
+        if [[ "${EXTENSION}" =~ openswoole ]]; then
+            install_swoole_extension "${PHP}" "openswoole"
+        elif [[ "${EXTENSION}" =~ swoole ]]; then
+            install_swoole_extension "${PHP}" "swoole"
+        else
+            # Converting extension name to package name, e.g. php8.0-redis
+            TO_INSTALL="${TO_INSTALL}php${PHP}-$EXTENSION "
+        fi
     done
 
     if [ -z "$TO_INSTALL" ]; then
