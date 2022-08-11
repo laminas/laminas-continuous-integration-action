@@ -72,6 +72,7 @@ RUN apt update \
         wget \
         yamllint \
         zip \
+        unzip \
         msodbcsql17 \
         \
         php-pear \
