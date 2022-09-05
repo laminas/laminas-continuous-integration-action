@@ -86,7 +86,7 @@ function composer_install_dependencies {
     local DEPS=$1
     local IGNORE_PHP_PLATFORM_REQUIREMENT=$2
     local ADDITIONAL_COMPOSER_ARGUMENTS=$3
-    local COMPOSER_ARGS="--ansi --no-interaction --no-progress --prefer-dist ${ADDITIONAL_COMPOSER_ARGUMENTS}"
+    local COMPOSER_ARGS="--ansi --no-interaction --no-progress ${ADDITIONAL_COMPOSER_ARGUMENTS}"
     if [[ "${IGNORE_PHP_PLATFORM_REQUIREMENT}" == "true" ]];then
         COMPOSER_ARGS="${COMPOSER_ARGS} --ignore-platform-req=php"
     fi
