@@ -202,6 +202,21 @@ RUN apt update \
         php8.1-xml \
         php8.1-xsl \
         php8.1-zip \
+        \
+        php8.2-cli \
+        php8.2-bz2 \
+        php8.2-curl \
+        php8.2-dev \
+        php8.2-fileinfo \
+        php8.2-intl \
+        php8.2-mbstring \
+        php8.2-phar \
+        php8.2-phpdbg \
+        php8.2-readline \
+        php8.2-sockets \
+        php8.2-xml \
+        php8.2-xsl \
+        php8.2-zip \
     # Set default PHP version
     && update-alternatives --set php /usr/bin/php7.4 \
     && update-alternatives --set phpize /usr/bin/phpize7.4 \
