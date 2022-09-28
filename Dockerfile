@@ -1,6 +1,6 @@
 # Aliasing base images, so we can change just this, when needing to upgrade or pull base layers
 FROM ubuntu:20.04 AS base-distro
-FROM composer:2.4.1 AS composer
+FROM composer:2.4.2 AS composer
 
 
 FROM base-distro AS install-markdownlint
