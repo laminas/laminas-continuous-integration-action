@@ -60,7 +60,7 @@ RUN apt update \
       software-properties-common \
     && (curl -sSL https://packages.microsoft.com/keys/microsoft.asc | apt-key add -) \
     && add-apt-repository -y ppa:ondrej/php \
-    && add-apt-repository -y https://packages.microsoft.com/ubuntu/20.04/prod \
+    && add-apt-repository -y https://packages.microsoft.com/ubuntu/22.04/prod \
     && apt install -y --no-install-recommends \
         # Base dependencies
         git \
