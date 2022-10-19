@@ -1,5 +1,5 @@
 # Aliasing base images, so we can change just this, when needing to upgrade or pull base layers
-FROM ubuntu:20.04 AS base-distro
+FROM ubuntu:22.04 AS base-distro
 FROM composer:2.4.3 AS composer
 
 
@@ -60,7 +60,7 @@ RUN apt update \
       software-properties-common \
     && (curl -sSL https://packages.microsoft.com/keys/microsoft.asc | apt-key add -) \
     && add-apt-repository -y ppa:ondrej/php \
-    && add-apt-repository -y https://packages.microsoft.com/ubuntu/20.04/prod \
+    && add-apt-repository -y https://packages.microsoft.com/ubuntu/22.04/prod \
     && apt install -y --no-install-recommends \
         # Base dependencies
         git \
