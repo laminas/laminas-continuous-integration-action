@@ -67,6 +67,7 @@ RUN apt update \
         jq \
         libxml2-utils \
         libzip-dev \
+        make \
         nodejs \
         sudo \
         wget \
