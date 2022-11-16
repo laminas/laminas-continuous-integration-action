@@ -6,7 +6,7 @@
 
 set -e
 
-SWOOLE_PACKAGE_URL="https://github.com/weierophinney/laminas-ci-swoole-builder/releases/download/0.2.0/php%s-%s.tgz"
+SWOOLE_PACKAGE_URL="https://github.com/weierophinney/laminas-ci-swoole-builder/releases/download/0.2.2/php%s-%s.tgz"
 
 function install_extensions {
     local PHP=$1
