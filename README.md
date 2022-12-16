@@ -233,6 +233,7 @@ The container the action provides and consumes builds off the ubuntu:focal image
 - 7.4
 - 8.0
 - 8.1
+- 8.2
 
 Each provides the following extensions by default:
 
