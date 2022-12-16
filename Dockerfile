@@ -263,4 +263,7 @@ COPY setup/phpunit/problem-matcher.json /etc/laminas-ci/problem-matcher/phpunit.
 
 RUN useradd -ms /bin/bash testuser
 
+# Copy ubuntu setup
+COPY setup/ubuntu /
+
 ENTRYPOINT ["entrypoint.sh"]
