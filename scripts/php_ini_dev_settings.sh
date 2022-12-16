@@ -14,7 +14,7 @@ SUBSTITUTIONS+=('s/mysqlnd.collect_memory_statistics ?= ?(On|Off)/mysqlnd.collec
 SUBSTITUTIONS+=('s/zend.assertions ?= ?(-1|1)/zend.assertions = 1/')
 SUBSTITUTIONS+=('s/opcache.huge_code_pages ?= ?(0|1)/opcache.huge_code_pages = 0/')
 
-for PHP_VERSION in 5.6 7.0 7.1 7.2 7.3 7.4 8.0 8.1;do
+for PHP_VERSION in 5.6 7.0 7.1 7.2 7.3 7.4 8.0 8.1 8.2;do
     for PHP_SAPI in cli phpdbg; do
         INI_FILE="/etc/php/${PHP_VERSION}/${PHP_SAPI}/php.ini"
         for SUBSTITUTION in "${SUBSTITUTIONS[@]}";do
