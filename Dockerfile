@@ -219,9 +219,9 @@ RUN apt update \
         php8.2-xsl \
         php8.2-zip \
     # Set default PHP version
-    && update-alternatives --set php /usr/bin/php7.4 \
-    && update-alternatives --set phpize /usr/bin/phpize7.4 \
-    && update-alternatives --set php-config /usr/bin/php-config7.4 \
+    && update-alternatives --set php /usr/bin/php8.0 \
+    && update-alternatives --set phpize /usr/bin/phpize8.0 \
+    && update-alternatives --set php-config /usr/bin/php-config8.0 \
     && apt autoremove -y \
     && apt clean
 
