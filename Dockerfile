@@ -263,4 +263,8 @@ COPY setup/phpunit/problem-matcher.json /etc/laminas-ci/problem-matcher/phpunit.
 
 RUN useradd -ms /bin/bash testuser
 
+# Copy ubuntu setup
+COPY setup/ubuntu /
+RUN test 1048576 -eq $(sudo --preserve-env --set-home -u testuser /bin/bash -c ulimit -n) || (echo "Maximum open file limit is not configured properly" && exit 255)
+
 ENTRYPOINT ["entrypoint.sh"]
