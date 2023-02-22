@@ -152,7 +152,6 @@ echo "Marking PHP ${PHP} as configured default"
 update-alternatives --quiet --set php "/usr/bin/php${PHP}"
 update-alternatives --quiet --set php-config "/usr/bin/php-config${PHP}"
 update-alternatives --quiet --set phpize "/usr/bin/phpize${PHP}"
-update-alternatives --quiet --set phpdbg "/usr/bin/phpdbg${PHP}"
 
 # Marks the working directory as safe for the current user prior to checkout
 git config --global --add safe.directory '*'
@@ -188,7 +187,6 @@ fi
 if [[ "${INI}" != "" ]];then
     echo "Installing php.ini settings"
     echo "$INI" > "/etc/php/${PHP}/cli/conf.d/99-settings.ini"
-    echo "$INI" > "/etc/php/${PHP}/phpdbg/conf.d/99-settings.ini"
 fi
 
 echo "PHP version: $(php --version)"
