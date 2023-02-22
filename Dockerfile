@@ -86,8 +86,8 @@ RUN apt update \
         php5.6-intl \
         php5.6-json \
         php5.6-mbstring \
-        php5.6-pcov \
         php5.6-phar \
+        php5.6-phpdbg \
         php5.6-readline \
         php5.6-sockets \
         php5.6-xml \
@@ -102,8 +102,8 @@ RUN apt update \
         php7.0-intl \
         php7.0-json \
         php7.0-mbstring \
-        php7.0-pcov \
         php7.0-phar \
+        php7.0-phpdbg \
         php7.0-readline \
         php7.0-sockets \
         php7.0-xml \
