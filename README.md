@@ -213,10 +213,10 @@ The tricks to remember are:
 - You need to set the container WORKDIR to that volume.
 - You need to provide the job JSON.
 
-As an example, if you wanted to run the CS checks under PHP 7.4 using locked dependencies, you could do something like the following:
+As an example, if you wanted to run the CS checks under PHP 8.2 using locked dependencies, you could do something like the following:
 
 ```bash
-$ docker run -v $(realpath .):/github/workspace -w=/github/workspace laminas-check-runner:latest '{"php":"7.4","dependencies":"locked","extensions":[],"ini":["memory_limit=-1"],"command":"./vendor/bin/phpcs"}'
+$ docker run -v $(realpath .):/github/workspace -w=/github/workspace laminas-check-runner:latest '{"php":"8.2","dependencies":"locked","extensions":[],"ini":["memory_limit=-1"],"command":"./vendor/bin/phpcs"}'
 ```
 
 The trick to remember: the job JSON should generally be in single quotes, to allow the `"` characters used to delimit properties and strings in the JSON to not cause interpolation issues.
@@ -225,12 +225,6 @@ The trick to remember: the job JSON should generally be in single quotes, to all
 
 The container the action provides and consumes builds off the ubuntu:focal image, installs the [Sury PHP repository](https://deb.sury.org/), and installs PHP versions:
 
-- 5.6
-- 7.0
-- 7.1
-- 7.2
-- 7.3
-- 7.4
 - 8.0
 - 8.1
 - 8.2
@@ -250,7 +244,7 @@ Each provides the following extensions by default:
 - xsl
 - zip
 
-You may specify other extensions to install during a job by selecting them from the list of packages in the Sury repository, and dropping the `php{VERSION}` prefix; e.g., the package "php7.4-tidy" provides the "tidy" extension, so you would only specify "tidy" if you want to include that extension for your build.
+You may specify other extensions to install during a job by selecting them from the list of packages in the Sury repository, and dropping the `php{VERSION}` prefix; e.g., the package "php8.2-tidy" provides the "tidy" extension, so you would only specify "tidy" if you want to include that extension for your build.
 
 We also provide the following extensions:
 
