@@ -8,16 +8,16 @@
     "packages": [
         {
             "name": "staabm/annotate-pull-request-from-checkstyle",
-            "version": "1.8.3",
+            "version": "1.8.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/staabm/annotate-pull-request-from-checkstyle.git",
-                "reference": "4d2b7cd5cd5fb8f172e16ba81d4e80a97aec383d"
+                "reference": "9249112205cce34b65ef4586193da453e94e5115"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/staabm/annotate-pull-request-from-checkstyle/zipball/4d2b7cd5cd5fb8f172e16ba81d4e80a97aec383d",
-                "reference": "4d2b7cd5cd5fb8f172e16ba81d4e80a97aec383d",
+                "url": "https://api.github.com/repos/staabm/annotate-pull-request-from-checkstyle/zipball/9249112205cce34b65ef4586193da453e94e5115",
+                "reference": "9249112205cce34b65ef4586193da453e94e5115",
                 "shasum": ""
             },
             "require": {
@@ -41,9 +41,14 @@
                     "name": "Markus Staab"
                 }
             ],
+            "keywords": [
+                "Github Actions",
+                "continous integration",
+                "dev"
+            ],
             "support": {
                 "issues": "https://github.com/staabm/annotate-pull-request-from-checkstyle/issues",
-                "source": "https://github.com/staabm/annotate-pull-request-from-checkstyle/tree/1.8.3"
+                "source": "https://github.com/staabm/annotate-pull-request-from-checkstyle/tree/1.8.4"
             },
             "funding": [
                 {
@@ -51,7 +56,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2022-06-25T09:02:33+00:00"
+            "time": "2023-04-07T09:42:35+00:00"
         }
     ],
     "packages-dev": [],
