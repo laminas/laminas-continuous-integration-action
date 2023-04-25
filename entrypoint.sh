@@ -129,6 +129,11 @@ echo "Received job: ${JOB}"
 
 COMMAND=$(echo "${JOB}" | jq -r '.command // ""')
 
+if [[ "$RUNNER_DEBUG" == "true" ]]; then
+  echo "Debug mode enabled, trying do use debugCommand from JOB description if available..."
+  COMMAND=$(echo "${JOB}" | jq -r '.debugCommand // .command // ""')
+fi
+
 if [[ "${COMMAND}" == "" ]];then
     echo "Command is empty; nothing to run"
     exit 0
