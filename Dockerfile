@@ -61,6 +61,7 @@ RUN apt update \
     && (curl -sSL https://packages.microsoft.com/keys/microsoft.asc | apt-key add -) \
     && add-apt-repository -y ppa:ondrej/php \
     && add-apt-repository -y https://packages.microsoft.com/ubuntu/22.04/prod \
+    && (curl -ssL https://deb.nodesource.com/setup_20.x | bash -) \
     && apt install -y --no-install-recommends \
         # Base dependencies
         git \
