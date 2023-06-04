@@ -7,6 +7,7 @@ FROM base-distro AS install-markdownlint
 
 # Install system dependencies first - these don't change much
 RUN export DEBIAN_FRONTEND=noninteractive \
+    && (curl -ssL https://deb.nodesource.com/setup_20.x | bash -) \
     && apt update \
     && apt install -y --no-install-recommends \
         npm \
