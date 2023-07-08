@@ -141,6 +141,12 @@ if [[ "${PHP}" == "" ]];then
     exit 1
 fi
 
+RECONFIGURE_PHP_DEFAULT="yes"
+if [[ "${COMMAND}" =~ ^roave-backward-compatibility ]] || [[ "${COMMAND}" =~ ^/usr/bin/env roave-backward-compatibility ]] || [[ "${COMMAND}" =~ ^/usr/local/bin/roave-backward-compatibility ]]; then
+  echo "NOTE: Due to the execution of \"roave-backward-compatibility\" from within this container, the PHP version won't get changed.";
+  RECONFIGURE_PHP_DEFAULT="no"
+fi
+
 declare -a BEFORE_SCRIPT=()
 readarray -t BEFORE_SCRIPT < <(echo "${JOB}" | jq -rc '(.before_script // [])[]' )
 
@@ -148,11 +154,13 @@ declare -a AFTER_SCRIPT=()
 readarray -t AFTER_SCRIPT < <(echo "${JOB}" | jq -rc '(.after_script // [])[]' )
 
 
-echo "Marking PHP ${PHP} as configured default"
-update-alternatives --quiet --set php "/usr/bin/php${PHP}"
-update-alternatives --quiet --set php-config "/usr/bin/php-config${PHP}"
-update-alternatives --quiet --set phpize "/usr/bin/phpize${PHP}"
-update-alternatives --quiet --set phpdbg "/usr/bin/phpdbg${PHP}"
+if [[ "${RECONFIGURE_PHP_DEFAULT}" == "yes" ]]; then
+  echo "Marking PHP ${PHP} as configured default"
+  update-alternatives --quiet --set php "/usr/bin/php${PHP}"
+  update-alternatives --quiet --set php-config "/usr/bin/php-config${PHP}"
+  update-alternatives --quiet --set phpize "/usr/bin/phpize${PHP}"
+  update-alternatives --quiet --set phpdbg "/usr/bin/phpdbg${PHP}"
+fi
 
 # Marks the working directory as safe for the current user prior to checkout
 git config --global --add safe.directory '*'

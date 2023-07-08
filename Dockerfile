@@ -29,18 +29,6 @@ RUN cd /markdownlint \
     && if node_modules/.bin/markdownlint-cli2 /test-files/dummy-ko-markdown-test-file.md; then exit 1; else exit 0; fi
 
 
-FROM composer AS staabm-annotate-pull-request-from-checkstyle
-
-COPY setup/staabm-annotate-pull-request-from-checkstyle/composer.json \
-    setup/staabm-annotate-pull-request-from-checkstyle/composer.lock \
-    /staabm-annotate-pull-request-from-checkstyle/
-
-RUN cd /staabm-annotate-pull-request-from-checkstyle \
-    && composer install \
-        --no-dev \
-        --classmap-authoritative
-
-
 FROM base-distro
 
 LABEL "repository"="http://github.com/laminas/laminas-continuous-integration-action"
@@ -53,16 +41,18 @@ ENV COMPOSER_HOME=/usr/local/share/composer \
 
 # This may look a bit long, but it's just a big `apt install` section, followed by a cleanup,
 # so that we get a single compact layer, with not too many layer overwrites.
-RUN apt update \
+RUN export OS_VERSION=$(cat /etc/os-release | grep VERSION_ID | cut -d '"' -f2) \
+    && apt update \
     && apt upgrade -y \
     && apt install -y --no-install-recommends \
       curl \
       gpg-agent \
       software-properties-common \
-    && (curl -sSL https://packages.microsoft.com/keys/microsoft.asc | apt-key add -) \
+    && (curl -sSL https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor | tee /etc/apt/trusted.gpg.d/microsoft.gpg) \
     && add-apt-repository -y ppa:ondrej/php \
-    && add-apt-repository -y https://packages.microsoft.com/ubuntu/22.04/prod \
+    && curl -sSL https://packages.microsoft.com/config/ubuntu/$OS_VERSION/prod.list | tee /etc/apt/sources.list.d/microsoft.list \
     && (curl -ssL https://deb.nodesource.com/setup_20.x | bash -) \
+    && apt update \
     && apt install -y --no-install-recommends \
         # Base dependencies
         git \
@@ -76,7 +66,7 @@ RUN apt update \
         yamllint \
         zip \
         unzip \
-        msodbcsql17 \
+        msodbcsql18 \
         \
         php-pear \
         \
@@ -220,10 +210,6 @@ RUN apt update \
         php8.2-xml \
         php8.2-xsl \
         php8.2-zip \
-    # Set default PHP version
-    && update-alternatives --set php /usr/bin/php8.0 \
-    && update-alternatives --set phpize /usr/bin/phpize8.0 \
-    && update-alternatives --set php-config /usr/bin/php-config8.0 \
     && apt autoremove -y \
     && apt clean
 
@@ -245,12 +231,6 @@ COPY --from=install-markdownlint /markdownlint /markdownlint
 RUN ln -s /markdownlint/node_modules/.bin/markdownlint-cli2 /usr/local/bin/markdownlint
 COPY --from=install-markdownlint /markdownlint/markdownlint.json /etc/laminas-ci/markdownlint.json
 
-
-# Copy staabm/annotate-pull-request-from-checkstyle to this stage
-COPY --from=staabm-annotate-pull-request-from-checkstyle /staabm-annotate-pull-request-from-checkstyle /staabm-annotate-pull-request-from-checkstyle
-RUN ln -s /staabm-annotate-pull-request-from-checkstyle/vendor/bin/cs2pr /usr/local/bin/cs2pr
-
-
 # Add composer binary to the image
 COPY --from=composer /usr/bin/composer /usr/bin/composer
 
@@ -261,6 +241,33 @@ COPY --from=composer /usr/bin/composer /usr/bin/composer
 # annotations (https://docs.github.com/en/actions/using-workflows/workflow-commands-for-github-actions#setting-a-warning-message)
 COPY setup/markdownlint/problem-matcher.json /etc/laminas-ci/problem-matcher/markdownlint.json
 COPY setup/phpunit/problem-matcher.json /etc/laminas-ci/problem-matcher/phpunit.json
+
+
+# Setup external tools
+COPY composer.json \
+    composer.lock \
+    /tools/
+
+RUN cd /tools \
+    # Install `ext-bcmath` as it seems to be a requirement for `roave/backward-compatibility-check`
+    && apt install -y php-bcmath \
+    && composer install \
+        --classmap-authoritative
+
+# Set default PHP version based on the `composer.json` `config.platform.php` setting
+RUN export DEFAULT_PHP_VERSION=$(jq -r '.config.platform.php | sub("(?<minor>[0-9.]).99$"; "\(.minor)")' /tools/composer.json) \
+    # Cleanup composer files from external tools folder
+    && rm /tools/composer.* \
+    && update-alternatives --set php /usr/bin/php$DEFAULT_PHP_VERSION \
+    && update-alternatives --set phpize /usr/bin/phpize$DEFAULT_PHP_VERSION \
+    && update-alternatives --set php-config /usr/bin/php-config$DEFAULT_PHP_VERSION \
+    && echo "DEFAULT_PHP_VERSION=${DEFAULT_PHP_VERSION}" >> /etc/environment
+
+# Copy staabm/annotate-pull-request-from-checkstyle to external-tools stage
+RUN ln -s /tools/vendor/bin/cs2pr /usr/local/bin/cs2pr
+
+# Copy roave/backward-compatibility-check to this stage
+RUN ln -s /tools/vendor/bin/roave-backward-compatibility-check /usr/local/bin/roave-backward-compatibility-check
 
 
 RUN useradd -ms /bin/bash testuser
