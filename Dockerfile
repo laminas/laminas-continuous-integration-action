@@ -261,6 +261,7 @@ RUN export DEFAULT_PHP_VERSION=$(jq -r '.config.platform.php | sub("(?<minor>[0-
     && update-alternatives --set php /usr/bin/php$DEFAULT_PHP_VERSION \
     && update-alternatives --set phpize /usr/bin/phpize$DEFAULT_PHP_VERSION \
     && update-alternatives --set php-config /usr/bin/php-config$DEFAULT_PHP_VERSION \
+    && update-alternatives --set phpdbg /usr/bin/phpdbg$DEFAULT_PHP_VERSION \
     && echo "DEFAULT_PHP_VERSION=${DEFAULT_PHP_VERSION}" >> /etc/environment
 
 # Copy staabm/annotate-pull-request-from-checkstyle to external-tools stage
