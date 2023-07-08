@@ -148,8 +148,8 @@ if [[ "${PHP}" == "@default" ]]; then
   RECONFIGURE_PHP_DEFAULT="no"
 fi
 
-if [[ "${COMMAND}" =~ ^roave-backward-compatibility ]] || [[ "${COMMAND}" =~ ^/usr/bin/env roave-backward-compatibility ]] || [[ "${COMMAND}" =~ ^/usr/local/bin/roave-backward-compatibility ]]; then
-  echo "NOTE: Due to the execution of \"roave-backward-compatibility\" from within this container, the PHP version won't get changed.";
+if [[ "${COMMAND}" =~ "^roave-backward-compatibility-check" ]] || [[ "${COMMAND}" =~ "^/usr/bin/env roave-backward-compatibility-check" ]] || [[ "${COMMAND}" =~ "^/usr/local/bin/roave-backward-compatibility-check" ]]; then
+  echo "NOTE: Due to the execution of \"roave-backward-compatibility-check\" from within this container, the PHP version won't get changed.";
   RECONFIGURE_PHP_DEFAULT="no"
 fi
 
