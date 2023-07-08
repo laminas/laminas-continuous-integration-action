@@ -142,6 +142,12 @@ if [[ "${PHP}" == "" ]];then
 fi
 
 RECONFIGURE_PHP_DEFAULT="yes"
+
+# If the default PHP version from the container is requested, we do not reconfigure PHP version
+if [[ "${PHP}" == "@default" ]]; then
+  RECONFIGURE_PHP_DEFAULT="no"
+fi
+
 if [[ "${COMMAND}" =~ ^roave-backward-compatibility ]] || [[ "${COMMAND}" =~ ^/usr/bin/env roave-backward-compatibility ]] || [[ "${COMMAND}" =~ ^/usr/local/bin/roave-backward-compatibility ]]; then
   echo "NOTE: Due to the execution of \"roave-backward-compatibility\" from within this container, the PHP version won't get changed.";
   RECONFIGURE_PHP_DEFAULT="no"
