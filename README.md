@@ -267,6 +267,8 @@ The container provides the following tools:
 
 - [cs2pr](https://github.com/staabm/annotate-pull-request-from-checkstyle), which creates PR annotations from checkstyle output. If a tool you are using, such as `phpcs`, provides checkstyle output, you can pipe it to `cs2pr` to create PR annotations from errors/warnings/etc. raised.
 
+- [roave-backward-compatibility-check](https://github.com/Roave/BackwardCompatibilityCheck), which checks the code for BC breakages and creates PR annotations in case something will break the exposed API.
+
 - A `markdownlint` binary, via the [DavidAnson/markdownlint-cli2](https://github.com/DavidAnson/markdownlint-cli2) package.
   A default configuration is provided that disables the following rules:
 
