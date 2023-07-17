@@ -165,7 +165,6 @@ if [[ "${RECONFIGURE_PHP_DEFAULT}" == "yes" ]]; then
   update-alternatives --quiet --set php "/usr/bin/php${PHP}"
   update-alternatives --quiet --set php-config "/usr/bin/php-config${PHP}"
   update-alternatives --quiet --set phpize "/usr/bin/phpize${PHP}"
-  update-alternatives --quiet --set phpdbg "/usr/bin/phpdbg${PHP}"
 fi
 
 # Marks the working directory as safe for the current user prior to checkout
