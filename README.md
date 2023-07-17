@@ -114,12 +114,14 @@ The `.laminas-ci/pre-install.sh` command runs before any other command is execut
 - `$1`: the user the QA command will run under
 - `$2`: the WORKDIR path
 - `$3`: the `$JOB` passed to the entrypoint (see above)
+- `$4`: the `$PHP` (<major>.<minor>) configured for execution
 
 The `.laminas-ci/pre-run.sh` command runs immediately prior to the QA command, and will receive the following arguments:
 
 - `$1`: the user the QA command will run under
 - `$2`: the WORKDIR path
 - `$3`: the `$JOB` passed to the entrypoint (see above)
+- `$4`: the `$PHP` (<major>.<minor>) configured for execution
 
 It is also possible to pass `before_script` with a list of commands via the `$JOB` variable.
 
@@ -129,6 +131,7 @@ The `.laminas-ci/post-run.sh` command will receive these arguments:
 - `$2`: the user the QA command will run under
 - `$3`: the WORKDIR path
 - `$4`: the `$JOB` passed to the entrypoint (see above)
+- `$5`: the `$PHP` (<major>.<minor>) configured for execution
 
 It is also possible to pass `after_script` with a list of commands via the `$JOB` variable. 
 `$STATUS` is a variable containing the exit code of the command and can be used in the commands listed in `after_script`. 
