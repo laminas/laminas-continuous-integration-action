@@ -146,6 +146,7 @@ RECONFIGURE_PHP_DEFAULT="yes"
 # If the default PHP version from the container is requested, we do not reconfigure PHP version
 if [[ "${PHP}" == "@default" ]]; then
   RECONFIGURE_PHP_DEFAULT="no"
+  PHP=$(php -nr "echo PHP_MAJOR_VERSION . '.' . PHP_MINOR_VERSION;")
 fi
 
 if [[ "${COMMAND}" =~ "^roave-backward-compatibility-check" ]] || [[ "${COMMAND}" =~ "^/usr/bin/env roave-backward-compatibility-check" ]] || [[ "${COMMAND}" =~ "^/usr/local/bin/roave-backward-compatibility-check" ]]; then
@@ -175,7 +176,7 @@ checkout
 # Is there a pre-install script available?
 if [ -x ".laminas-ci/pre-install.sh" ];then
     echo "Executing pre-install commands from .laminas-ci/pre-install.sh"
-    ./.laminas-ci/pre-install.sh testuser "${PWD}" "${JOB}"
+    ./.laminas-ci/pre-install.sh testuser "${PWD}" "${JOB}" "${PHP}"
 fi
 
 EXTENSIONS=$(echo "${JOB}" | jq -r ".extensions // [] | join(\" \")")
@@ -237,7 +238,7 @@ chown -R testuser .
 # Is there a pre-run script available?
 if [ -x ".laminas-ci/pre-run.sh" ];then
     echo "Executing pre-run commands from .laminas-ci/pre-run.sh"
-    ./.laminas-ci/pre-run.sh testuser "${PWD}" "${JOB}"
+    ./.laminas-ci/pre-run.sh testuser "${PWD}" "${JOB}" "${PHP}"
 fi
 
 for BEFORE_SCRIPT_COMMAND in "${BEFORE_SCRIPT[@]}"; do
@@ -257,7 +258,7 @@ set -e
 # Is there a post-run script available?
 if [ -x ".laminas-ci/post-run.sh" ];then
     echo "Executing post-run commands from .laminas-ci/post-run.sh"
-    ./.laminas-ci/post-run.sh "${STATUS}" testuser "${PWD}" "${JOB}"
+    ./.laminas-ci/post-run.sh "${STATUS}" testuser "${PWD}" "${JOB}" "${PHP}"
 fi
 
 for AFTER_SCRIPT_COMMAND in "${AFTER_SCRIPT[@]}"; do
