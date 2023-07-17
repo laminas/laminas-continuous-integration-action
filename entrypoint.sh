@@ -202,7 +202,6 @@ fi
 if [[ "${INI}" != "" ]];then
     echo "Installing php.ini settings"
     echo "$INI" > "/etc/php/${PHP}/cli/conf.d/99-settings.ini"
-    echo "$INI" > "/etc/php/${PHP}/phpdbg/conf.d/99-settings.ini"
 fi
 
 echo "PHP version: $(php --version)"
