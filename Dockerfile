@@ -114,6 +114,21 @@ RUN export OS_VERSION=$(cat /etc/os-release | grep VERSION_ID | cut -d '"' -f2) 
         php8.2-xml \
         php8.2-xsl \
         php8.2-zip \
+        \
+        php8.3-cli \
+        php8.3-bz2 \
+        php8.3-curl \
+        php8.3-dev \
+        php8.3-fileinfo \
+        php8.3-intl \
+        php8.3-mbstring \
+        php8.3-phar \
+        php8.3-phpdbg \
+        php8.3-readline \
+        php8.3-sockets \
+        php8.3-xml \
+        php8.3-xsl \
+        php8.3-zip \
     && apt autoremove -y \
     && apt clean
 
@@ -154,7 +169,7 @@ COPY composer.json \
 
 RUN cd /tools \
     # Install `ext-bcmath` as it seems to be a requirement for `roave/backward-compatibility-check`
-    && apt install -y php-bcmath \
+    && apt install -y php-bcmath php8.3-bcmath \
     && composer install \
         --classmap-authoritative
 

@@ -14,7 +14,7 @@ SUBSTITUTIONS+=('s/mysqlnd.collect_memory_statistics ?= ?(On|Off)/mysqlnd.collec
 SUBSTITUTIONS+=('s/zend.assertions ?= ?(-1|1)/zend.assertions = 1/')
 SUBSTITUTIONS+=('s/opcache.huge_code_pages ?= ?(0|1)/opcache.huge_code_pages = 0/')
 
-for PHP_VERSION in 8.0 8.1 8.2;do
+for PHP_VERSION in 8.0 8.1 8.2 8.3;do
     INI_FILE="/etc/php/${PHP_VERSION}/cli/php.ini"
     for SUBSTITUTION in "${SUBSTITUTIONS[@]}";do
         sed --in-place -E -e "${SUBSTITUTION}" "${INI_FILE}"
