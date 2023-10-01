@@ -228,6 +228,14 @@ RUN export OS_VERSION=$(cat /etc/os-release | grep VERSION_ID | cut -d '"' -f2) 
     && apt autoremove -y \
     && apt clean
 
+# Temporary fix for https://github.com/laminas/laminas-continuous-integration-action/issues/188
+RUN cp \
+    /usr/share/libtool/build-aux/config.sub \
+    /usr/share/libtool/build-aux/config.guess \
+    /usr/share/libtool/build-aux/ltmain.sh \
+    /usr/bin/shtool \
+    /usr/lib/php/20230831/build
+
 # Build/install static modules that do not have packages
 COPY mods-available /mods-available
 COPY mods-install /mods-install
@@ -263,21 +271,21 @@ COPY composer.json \
     composer.lock \
     /tools/
 
-RUN cd /tools \
-    # Install `ext-bcmath` as it seems to be a requirement for `roave/backward-compatibility-check`
-    && apt install -y php-bcmath php8.3-bcmath \
-    && composer install \
-        --classmap-authoritative
-
 # Set default PHP version based on the `composer.json` `config.platform.php` setting
 RUN export DEFAULT_PHP_VERSION=$(jq -r '.config.platform.php | sub("(?<minor>[0-9.]).99$"; "\(.minor)")' /tools/composer.json) \
-    # Cleanup composer files from external tools folder
-    && rm /tools/composer.* \
     && update-alternatives --set php /usr/bin/php$DEFAULT_PHP_VERSION \
     && update-alternatives --set phpize /usr/bin/phpize$DEFAULT_PHP_VERSION \
     && update-alternatives --set php-config /usr/bin/php-config$DEFAULT_PHP_VERSION \
     && update-alternatives --set phpdbg /usr/bin/phpdbg$DEFAULT_PHP_VERSION \
     && echo "DEFAULT_PHP_VERSION=${DEFAULT_PHP_VERSION}" >> /etc/environment
+
+RUN cd /tools \
+    # Install `ext-bcmath` as it seems to be a requirement for `roave/backward-compatibility-check`
+    && apt install -y php-bcmath \
+    && composer install \
+        --classmap-authoritative \
+    # Cleanup composer files from external tools folder
+    && rm /tools/composer.*
 
 # Copy staabm/annotate-pull-request-from-checkstyle to external-tools stage
 RUN ln -s /tools/vendor/bin/cs2pr /usr/local/bin/cs2pr
