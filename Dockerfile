@@ -132,6 +132,14 @@ RUN export OS_VERSION=$(cat /etc/os-release | grep VERSION_ID | cut -d '"' -f2) 
     && apt autoremove -y \
     && apt clean
 
+# Temporary fix for https://github.com/laminas/laminas-continuous-integration-action/issues/188
+RUN cp \
+    /usr/share/libtool/build-aux/config.sub \
+    /usr/share/libtool/build-aux/config.guess \
+    /usr/share/libtool/build-aux/ltmain.sh \
+    /usr/bin/shtool \
+    /usr/lib/php/20230831/build
+
 # Build/install static modules that do not have packages
 COPY mods-available /mods-available
 COPY mods-install /mods-install
@@ -169,7 +177,7 @@ COPY composer.json \
 
 RUN cd /tools \
     # Install `ext-bcmath` as it seems to be a requirement for `roave/backward-compatibility-check`
-    && apt install -y php-bcmath php8.3-bcmath \
+    && apt install -y php-bcmath \
     && composer install \
         --classmap-authoritative
 
