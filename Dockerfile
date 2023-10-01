@@ -188,7 +188,7 @@ RUN cd /tools \
     && composer install \
         --classmap-authoritative \
     # Cleanup composer files from external tools folder
-    && rm /tools/composer.* \
+    && rm /tools/composer.*
 
 # Copy staabm/annotate-pull-request-from-checkstyle to external-tools stage
 RUN ln -s /tools/vendor/bin/cs2pr /usr/local/bin/cs2pr
