@@ -12,7 +12,7 @@ jobs:
       DOCKER_USER: ${{ secrets.CONTAINER_USERNAME }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v4.1.1
 
       - name: Setup Docker Buildx
         uses: docker/setup-buildx-action@v3
