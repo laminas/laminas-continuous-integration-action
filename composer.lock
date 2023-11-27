@@ -8,16 +8,16 @@
     "packages": [
         {
             "name": "azjezz/psl",
-            "version": "2.7.0",
+            "version": "2.8.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/azjezz/psl.git",
-                "reference": "cd599829541caf1bc87fa0b2a3367e050ff1f837"
+                "reference": "4955aa9d30790a3618b7933762359abdb41fd313"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/azjezz/psl/zipball/cd599829541caf1bc87fa0b2a3367e050ff1f837",
-                "reference": "cd599829541caf1bc87fa0b2a3367e050ff1f837",
+                "url": "https://api.github.com/repos/azjezz/psl/zipball/4955aa9d30790a3618b7933762359abdb41fd313",
+                "reference": "4955aa9d30790a3618b7933762359abdb41fd313",
                 "shasum": ""
             },
             "require": {
@@ -26,7 +26,7 @@
                 "ext-json": "*",
                 "ext-mbstring": "*",
                 "ext-sodium": "*",
-                "php": "~8.1.0 || ~8.2.0",
+                "php": "~8.1.0 || ~8.2.0 || ~8.3.0",
                 "revolt/event-loop": "^1.0.1"
             },
             "require-dev": {
@@ -70,15 +70,15 @@
             "description": "PHP Standard Library",
             "support": {
                 "issues": "https://github.com/azjezz/psl/issues",
-                "source": "https://github.com/azjezz/psl/tree/2.7.0"
+                "source": "https://github.com/azjezz/psl/tree/2.8.0"
             },
             "funding": [
                 {
-                    "url": "https://opencollective.com/php-standard-library",
-                    "type": "open_collective"
+                    "url": "https://github.com/azjezz",
+                    "type": "github"
                 }
             ],
-            "time": "2023-07-19T20:13:26+00:00"
+            "time": "2023-11-22T07:49:48+00:00"
         },
         {
             "name": "beberlei/assert",
@@ -633,16 +633,16 @@
         },
         {
             "name": "composer/spdx-licenses",
-            "version": "1.5.7",
+            "version": "1.5.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/composer/spdx-licenses.git",
-                "reference": "c848241796da2abf65837d51dce1fae55a960149"
+                "reference": "560bdcf8deb88ae5d611c80a2de8ea9d0358cc0a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/composer/spdx-licenses/zipball/c848241796da2abf65837d51dce1fae55a960149",
-                "reference": "c848241796da2abf65837d51dce1fae55a960149",
+                "url": "https://api.github.com/repos/composer/spdx-licenses/zipball/560bdcf8deb88ae5d611c80a2de8ea9d0358cc0a",
+                "reference": "560bdcf8deb88ae5d611c80a2de8ea9d0358cc0a",
                 "shasum": ""
             },
             "require": {
@@ -691,9 +691,9 @@
                 "validator"
             ],
             "support": {
-                "irc": "irc://irc.freenode.org/composer",
+                "irc": "ircs://irc.libera.chat:6697/composer",
                 "issues": "https://github.com/composer/spdx-licenses/issues",
-                "source": "https://github.com/composer/spdx-licenses/tree/1.5.7"
+                "source": "https://github.com/composer/spdx-licenses/tree/1.5.8"
             },
             "funding": [
                 {
@@ -709,7 +709,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2022-05-23T07:37:50+00:00"
+            "time": "2023-11-20T07:44:33+00:00"
         },
         {
             "name": "composer/xdebug-handler",
@@ -1324,16 +1324,16 @@
         },
         {
             "name": "roave/backward-compatibility-check",
-            "version": "8.3.0",
+            "version": "8.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Roave/BackwardCompatibilityCheck.git",
-                "reference": "40956d53832b80dd4025c87b4cf5e1756f42f43d"
+                "reference": "9b45bc3431f3dc651a8f2d6e199ca0d1e60a9978"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Roave/BackwardCompatibilityCheck/zipball/40956d53832b80dd4025c87b4cf5e1756f42f43d",
-                "reference": "40956d53832b80dd4025c87b4cf5e1756f42f43d",
+                "url": "https://api.github.com/repos/Roave/BackwardCompatibilityCheck/zipball/9b45bc3431f3dc651a8f2d6e199ca0d1e60a9978",
+                "reference": "9b45bc3431f3dc651a8f2d6e199ca0d1e60a9978",
                 "shasum": ""
             },
             "require": {
@@ -1343,7 +1343,7 @@
                 "nikic/php-parser": "^4.15.3",
                 "nikolaposa/version": "^4.1.0",
                 "ocramius/package-versions": "^2.7.0",
-                "php": "~8.1.0 || ~8.2.0",
+                "php": "~8.1.0 || ~8.2.0 || ~8.3.0",
                 "roave/better-reflection": "^6.5.0",
                 "symfony/console": "^6.2.3"
             },
@@ -1352,7 +1352,7 @@
                 "symfony/process": "<5.3.7"
             },
             "require-dev": {
-                "doctrine/coding-standard": "^11.0.0",
+                "doctrine/coding-standard": "^12.0.0",
                 "php-standard-library/psalm-plugin": "^2.2.1",
                 "phpunit/phpunit": "^9.5.27",
                 "psalm/plugin-phpunit": "^0.18.4",
@@ -1387,29 +1387,29 @@
             "description": "Tool to compare two revisions of a public API to check for BC breaks",
             "support": {
                 "issues": "https://github.com/Roave/BackwardCompatibilityCheck/issues",
-                "source": "https://github.com/Roave/BackwardCompatibilityCheck/tree/8.3.0"
+                "source": "https://github.com/Roave/BackwardCompatibilityCheck/tree/8.4.0"
             },
-            "time": "2023-02-11T17:26:11+00:00"
+            "time": "2023-11-25T16:28:35+00:00"
         },
         {
             "name": "roave/better-reflection",
-            "version": "6.17.0",
+            "version": "6.18.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Roave/BetterReflection.git",
-                "reference": "beb49d906821c2e3d5f7b44a7e2a3672ba27f7a2"
+                "reference": "91015e0941b7caf8b4004697f2c19d92771312fb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Roave/BetterReflection/zipball/beb49d906821c2e3d5f7b44a7e2a3672ba27f7a2",
-                "reference": "beb49d906821c2e3d5f7b44a7e2a3672ba27f7a2",
+                "url": "https://api.github.com/repos/Roave/BetterReflection/zipball/91015e0941b7caf8b4004697f2c19d92771312fb",
+                "reference": "91015e0941b7caf8b4004697f2c19d92771312fb",
                 "shasum": ""
             },
             "require": {
                 "ext-json": "*",
                 "jetbrains/phpstorm-stubs": "2023.2",
                 "nikic/php-parser": "^4.17.1",
-                "php": "~8.1.0 || ~8.2.0",
+                "php": "~8.1.0 || ~8.2.0 || ~8.3.0",
                 "roave/signature": "^1.7"
             },
             "conflict": {
@@ -1461,32 +1461,32 @@
             "description": "Better Reflection - an improved code reflection API",
             "support": {
                 "issues": "https://github.com/Roave/BetterReflection/issues",
-                "source": "https://github.com/Roave/BetterReflection/tree/6.17.0"
+                "source": "https://github.com/Roave/BetterReflection/tree/6.18.0"
             },
-            "time": "2023-11-19T14:30:25+00:00"
+            "time": "2023-11-24T18:31:06+00:00"
         },
         {
             "name": "roave/signature",
-            "version": "1.7.0",
+            "version": "1.8.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Roave/Signature.git",
-                "reference": "2ab4eadcb9f9d449f673a97b67797403b35eca94"
+                "reference": "f92ce20f82c9a1df3b50fc56fbdaeb82cf4c9c5b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Roave/Signature/zipball/2ab4eadcb9f9d449f673a97b67797403b35eca94",
-                "reference": "2ab4eadcb9f9d449f673a97b67797403b35eca94",
+                "url": "https://api.github.com/repos/Roave/Signature/zipball/f92ce20f82c9a1df3b50fc56fbdaeb82cf4c9c5b",
+                "reference": "f92ce20f82c9a1df3b50fc56fbdaeb82cf4c9c5b",
                 "shasum": ""
             },
             "require": {
-                "php": "8.0.*|8.1.*|8.2.*"
+                "php": "~8.0.0 || ~8.1.0 || ~8.2.0 || ~8.3.0"
             },
             "require-dev": {
-                "doctrine/coding-standard": "^10.0.0",
-                "infection/infection": "^0.26.15",
-                "phpunit/phpunit": "^9.5.25",
-                "vimeo/psalm": "^4.28.0"
+                "doctrine/coding-standard": "^12.0.0",
+                "infection/infection": "^0.26.19",
+                "phpunit/phpunit": "^9.6.7",
+                "vimeo/psalm": "^5.9.0"
             },
             "type": "library",
             "autoload": {
@@ -1501,9 +1501,9 @@
             "description": "Sign and verify stuff",
             "support": {
                 "issues": "https://github.com/Roave/Signature/issues",
-                "source": "https://github.com/Roave/Signature/tree/1.7.0"
+                "source": "https://github.com/Roave/Signature/tree/1.8.0"
             },
-            "time": "2022-10-10T08:44:53+00:00"
+            "time": "2023-11-25T00:11:29+00:00"
         },
         {
             "name": "seld/jsonlint",
