@@ -9,7 +9,8 @@ ARG NODE_MAJOR
 ENV NODE_MAJOR=$NODE_MAJOR
 
 # Install system dependencies first - these don't change much
-RUN export DEBIAN_FRONTEND=noninteractive \
+RUN set -eux; \
+    export DEBIAN_FRONTEND=noninteractive \
     && apt update \
     && apt install -y --no-install-recommends \
       ca-certificates \
@@ -52,7 +53,8 @@ ENV COMPOSER_HOME=/usr/local/share/composer \
 
 # This may look a bit long, but it's just a big `apt install` section, followed by a cleanup,
 # so that we get a single compact layer, with not too many layer overwrites.
-RUN export OS_VERSION=$(cat /etc/os-release | grep VERSION_ID | cut -d '"' -f2) \
+RUN set -eux; \
+    export OS_VERSION=$(cat /etc/os-release | grep VERSION_ID | cut -d '"' -f2) \
     && apt update \
     && apt upgrade -y \
     && apt install -y --no-install-recommends \
@@ -290,7 +292,8 @@ COPY composer.json \
     /tools/
 
 # Set default PHP version based on the `composer.json` `config.platform.php` setting
-RUN export DEFAULT_PHP_VERSION=$(jq -r '.config.platform.php | sub("(?<minor>[0-9.]).99$"; "\(.minor)")' /tools/composer.json) \
+RUN set -eux; \
+    export DEFAULT_PHP_VERSION=$(jq -r '.config.platform.php | sub("(?<minor>[0-9.]).99$"; "\(.minor)")' /tools/composer.json) \
     && update-alternatives --set php /usr/bin/php$DEFAULT_PHP_VERSION \
     && update-alternatives --set phpize /usr/bin/phpize$DEFAULT_PHP_VERSION \
     && update-alternatives --set php-config /usr/bin/php-config$DEFAULT_PHP_VERSION \
