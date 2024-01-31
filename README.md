@@ -95,7 +95,7 @@ jobs:
           job: ${{ matrix.job }}
 ```
 
-Same can be achieved with our reusable workflow :
+The same can be achieved with our reusable workflow:
 
 ```yaml
 name: "Continuous Integration"
@@ -112,11 +112,9 @@ jobs:
 
 > ### Duplicate CI runs
 >
-> When pull requests are opened from branches in the same repository CI pipeline could run twice for the same commit:
-> once when pushed to a branch and once when PR is opened. Workflow triggers could be adjusted to only run for
-> specific branches or to skip branches using simple glob patterns.
-> See [Events that trigger workflows](https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#running-your-workflow-only-when-a-push-to-specific-branches-occurs)
-> for more info.
+> When pull requests are opened from branches in the same repository, the CI pipeline could run twice for the same commit: once when pushed to a branch and once when the PR is opened.
+> Workflow triggers can be adjusted to only run for specific branches or to skip branches using simple glob patterns.
+> See the GitHub documentation for [Events that trigger workflows](https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#running-your-workflow-only-when-a-push-to-specific-branches-occurs) for more info.
 
 > ### actions/checkout not required
 >
