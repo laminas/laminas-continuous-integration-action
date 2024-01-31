@@ -70,6 +70,7 @@ RUN export OS_VERSION=$(cat /etc/os-release | grep VERSION_ID | cut -d '"' -f2) 
         \
         php-pear \
         \
+        php5.6-bcmath \
         php5.6-bz2 \
         php5.6-cli \
         php5.6-curl \
@@ -87,6 +88,7 @@ RUN export OS_VERSION=$(cat /etc/os-release | grep VERSION_ID | cut -d '"' -f2) 
         php5.6-zip \
         \
         php7.0-cli \
+        php7.0-bcmath \
         php7.0-bz2 \
         php7.0-curl \
         php7.0-dev \
@@ -103,6 +105,7 @@ RUN export OS_VERSION=$(cat /etc/os-release | grep VERSION_ID | cut -d '"' -f2) 
         php7.0-zip \
         \
         php7.1-cli \
+        php7.1-bcmath \
         php7.1-bz2 \
         php7.1-curl \
         php7.1-dev \
@@ -119,6 +122,7 @@ RUN export OS_VERSION=$(cat /etc/os-release | grep VERSION_ID | cut -d '"' -f2) 
         php7.1-zip \
         \
         php7.2-cli \
+        php7.2-bcmath \
         php7.2-bz2 \
         php7.2-curl \
         php7.2-dev \
@@ -135,6 +139,7 @@ RUN export OS_VERSION=$(cat /etc/os-release | grep VERSION_ID | cut -d '"' -f2) 
         php7.2-zip \
         \
         php7.3-cli \
+        php7.3-bcmath \
         php7.3-bz2 \
         php7.3-curl \
         php7.3-dev \
@@ -151,6 +156,7 @@ RUN export OS_VERSION=$(cat /etc/os-release | grep VERSION_ID | cut -d '"' -f2) 
         php7.3-zip \
         \
         php7.4-cli \
+        php7.4-bcmath \
         php7.4-bz2 \
         php7.4-curl \
         php7.4-dev \
@@ -167,6 +173,7 @@ RUN export OS_VERSION=$(cat /etc/os-release | grep VERSION_ID | cut -d '"' -f2) 
         php7.4-zip \
         \
         php8.0-cli \
+        php8.0-bcmath \
         php8.0-bz2 \
         php8.0-curl \
         php8.0-dev \
@@ -182,6 +189,7 @@ RUN export OS_VERSION=$(cat /etc/os-release | grep VERSION_ID | cut -d '"' -f2) 
         php8.0-zip \
         \
         php8.1-cli \
+        php8.1-bcmath \
         php8.1-bz2 \
         php8.1-curl \
         php8.1-dev \
@@ -197,6 +205,7 @@ RUN export OS_VERSION=$(cat /etc/os-release | grep VERSION_ID | cut -d '"' -f2) 
         php8.1-zip \
         \
         php8.2-cli \
+        php8.2-bcmath \
         php8.2-bz2 \
         php8.2-curl \
         php8.2-dev \
@@ -212,6 +221,7 @@ RUN export OS_VERSION=$(cat /etc/os-release | grep VERSION_ID | cut -d '"' -f2) 
         php8.2-zip \
         \
         php8.3-cli \
+        php8.3-bcmath \
         php8.3-bz2 \
         php8.3-curl \
         php8.3-dev \
@@ -272,8 +282,6 @@ RUN export DEFAULT_PHP_VERSION=$(jq -r '.config.platform.php | sub("(?<minor>[0-
     && echo "DEFAULT_PHP_VERSION=${DEFAULT_PHP_VERSION}" >> /etc/environment
 
 RUN cd /tools \
-    # Install `ext-bcmath` as it seems to be a requirement for `roave/backward-compatibility-check`
-    && apt install -y php-bcmath \
     && composer install \
         --classmap-authoritative \
     # Cleanup composer files from external tools folder
