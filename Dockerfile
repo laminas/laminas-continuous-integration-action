@@ -1,16 +1,27 @@
+ARG NODE_MAJOR=20
+
 # Aliasing base images, so we can change just this, when needing to upgrade or pull base layers
 FROM ubuntu:22.04 AS base-distro
 FROM composer:2.6.6 AS composer
 
-
 FROM base-distro AS install-markdownlint
+ARG NODE_MAJOR
+ENV NODE_MAJOR=$NODE_MAJOR
 
 # Install system dependencies first - these don't change much
-RUN export DEBIAN_FRONTEND=noninteractive \
-    && (curl -ssL https://deb.nodesource.com/setup_20.x | bash -) \
+RUN set -eux; \
+    export DEBIAN_FRONTEND=noninteractive \
     && apt update \
     && apt install -y --no-install-recommends \
-        npm \
+      ca-certificates \
+      curl \
+      gnupg \
+    && mkdir -p /etc/apt/keyrings \
+    && curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg \
+    && echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_$NODE_MAJOR.x nodistro main" | tee /etc/apt/sources.list.d/nodesource.list \
+    && apt update \
+    && apt install -y --no-install-recommends \
+        nodejs \
     && apt clean
 
 COPY setup/markdownlint/package.json \
@@ -30,32 +41,39 @@ RUN cd /markdownlint \
 
 
 FROM base-distro
-
+ARG NODE_MAJOR
 LABEL "repository"="http://github.com/laminas/laminas-continuous-integration-action"
 LABEL "homepage"="http://github.com/laminas/laminas-continuous-integration-action"
 LABEL "maintainer"="https://github.com/laminas/technical-steering-committee/"
 
 ENV COMPOSER_HOME=/usr/local/share/composer \
     DEBIAN_FRONTEND=noninteractive \
-    ACCEPT_EULA=Y
+    ACCEPT_EULA=Y \
+    NODE_MAJOR=$NODE_MAJOR
 
 # This may look a bit long, but it's just a big `apt install` section, followed by a cleanup,
 # so that we get a single compact layer, with not too many layer overwrites.
-RUN export OS_VERSION=$(cat /etc/os-release | grep VERSION_ID | cut -d '"' -f2) \
+RUN set -eux; \
+    export OS_VERSION=$(cat /etc/os-release | grep VERSION_ID | cut -d '"' -f2) \
     && apt update \
     && apt upgrade -y \
     && apt install -y --no-install-recommends \
       curl \
       gpg-agent \
       software-properties-common \
+      ca-certificates \
+      gnupg \
     && (curl -sSL https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor | tee /etc/apt/trusted.gpg.d/microsoft.gpg) \
     && add-apt-repository -y ppa:ondrej/php \
     && curl -sSL https://packages.microsoft.com/config/ubuntu/$OS_VERSION/prod.list | tee /etc/apt/sources.list.d/microsoft.list \
-    && (curl -ssL https://deb.nodesource.com/setup_20.x | bash -) \
+    && mkdir -p /etc/apt/keyrings \
+    && curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg \
+    && echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_$NODE_MAJOR.x nodistro main" | tee /etc/apt/sources.list.d/nodesource.list \
     && apt update \
     && apt install -y --no-install-recommends \
         # Base dependencies
         git \
+        nodejs \
         jq \
         libxml2-utils \
         libzip-dev \
@@ -274,7 +292,8 @@ COPY composer.json \
     /tools/
 
 # Set default PHP version based on the `composer.json` `config.platform.php` setting
-RUN export DEFAULT_PHP_VERSION=$(jq -r '.config.platform.php | sub("(?<minor>[0-9.]).99$"; "\(.minor)")' /tools/composer.json) \
+RUN set -eux; \
+    export DEFAULT_PHP_VERSION=$(jq -r '.config.platform.php | sub("(?<minor>[0-9.]).99$"; "\(.minor)")' /tools/composer.json) \
     && update-alternatives --set php /usr/bin/php$DEFAULT_PHP_VERSION \
     && update-alternatives --set phpize /usr/bin/phpize$DEFAULT_PHP_VERSION \
     && update-alternatives --set php-config /usr/bin/php-config$DEFAULT_PHP_VERSION \
