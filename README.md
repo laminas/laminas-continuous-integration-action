@@ -59,7 +59,16 @@ Generally speaking, you will use this in combination with the [laminas/laminas-c
 
 ## Usage
 
+Create `.github/workflows/continuous-integration.yml` file with following content:
+
 ```yaml
+name: "Continuous Integration"
+
+on:
+  pull_request:
+  push:
+    branches:
+
 jobs:
   matrix:
     name: Generate job matrix
@@ -70,7 +79,6 @@ jobs:
       - name: Gather CI configuration
         id: matrix
         uses: laminas/laminas-ci-matrix-action@v1
-
   qa:
     name: QA Checks
     needs: [matrix]
@@ -86,6 +94,27 @@ jobs:
         with:
           job: ${{ matrix.job }}
 ```
+
+The same can be achieved with our reusable workflow:
+
+```yaml
+name: "Continuous Integration"
+
+on:
+  pull_request:
+  push:
+    branches:
+
+jobs:
+  ci:
+    uses: laminas/workflow-continuous-integration/.github/workflows/continuous-integration.yml@1.x
+```
+
+> ### Duplicate CI runs
+>
+> When pull requests are opened from branches in the same repository, the CI pipeline could run twice for the same commit: once when pushed to a branch and once when the PR is opened.
+> Workflow triggers can be adjusted to only run for specific branches or to skip branches using simple glob patterns.
+> See the GitHub documentation for [Events that trigger workflows](https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#running-your-workflow-only-when-a-push-to-specific-branches-occurs) for more info.
 
 > ### actions/checkout not required
 >
@@ -219,7 +248,7 @@ The tricks to remember are:
 As an example, if you wanted to run the CS checks under PHP 8.2 using locked dependencies, you could do something like the following:
 
 ```bash
-$ docker run -v $(realpath .):/github/workspace -w=/github/workspace laminas-check-runner:latest '{"php":"8.2","dependencies":"locked","extensions":[],"ini":["memory_limit=-1"],"command":"./vendor/bin/phpcs"}'
+$ docker run -v $(realpath .):/github/workspace -w=/github/workspace ghcr.io/laminas/laminas-continuous-integration:1  '{"php":"8.2","dependencies":"locked","extensions":[],"ini":["memory_limit=-1"],"command":"./vendor/bin/phpcs"}'
 ```
 
 The trick to remember: the job JSON should generally be in single quotes, to allow the `"` characters used to delimit properties and strings in the JSON to not cause interpolation issues.
