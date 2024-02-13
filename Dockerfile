@@ -2,7 +2,7 @@ ARG NODE_MAJOR=20
 
 # Aliasing base images, so we can change just this, when needing to upgrade or pull base layers
 FROM ubuntu:22.04 AS base-distro
-FROM composer:2.6.6 AS composer
+FROM composer:2.7.1 AS composer
 
 FROM base-distro AS install-markdownlint
 ARG NODE_MAJOR
