@@ -253,6 +253,22 @@ RUN set -eux; \
         php8.3-xml \
         php8.3-xsl \
         php8.3-zip \
+        \
+        php8.4-cli \
+        php8.4-bcmath \
+        php8.4-bz2 \
+        php8.4-curl \
+        php8.4-dev \
+        php8.4-fileinfo \
+        php8.4-intl \
+        php8.4-mbstring \
+        php8.4-phar \
+        php8.4-phpdbg \
+        php8.4-readline \
+        php8.4-sockets \
+        php8.4-xml \
+        php8.4-xsl \
+        php8.4-zip \
     && apt autoremove -y \
     && apt clean
 
