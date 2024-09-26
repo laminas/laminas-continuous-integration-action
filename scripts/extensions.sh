@@ -94,12 +94,16 @@ ENABLED_EXTENSIONS=$(php -m | tr '[:upper:]' '[:lower:]' | egrep -v '^[\[]' | gr
 EXTENSIONS_TO_INSTALL=()
 
 add_extension_to_install() {
-    local extension=$1
+    local EXTENSION=$1
 
     # Prevent duplicates
-    if [[ ! " ${EXTENSIONS_TO_INSTALL[@]} " =~ " ${extension} " ]]; then
-        EXTENSIONS_TO_INSTALL+=("${extension}")
-    fi
+    for TO_BE_INSTALLED in "${EXTENSIONS_TO_INSTALL[@]}"; do
+        if [[ "${TO_BE_INSTALLED}" == "${EXTENSION}" ]]; then
+            return
+        fi
+    done
+
+    EXTENSIONS_TO_INSTALL+=("${EXTENSION}")
 }
 
 # Loop through known statically compiled/installed extensions, and enable them.
