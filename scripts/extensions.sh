@@ -93,10 +93,18 @@ declare -a EXTENSIONS=(${@:2})
 ENABLED_EXTENSIONS=$(php -m | tr '[:upper:]' '[:lower:]' | egrep -v '^[\[]' | grep -v 'zend opcache')
 EXTENSIONS_TO_INSTALL=()
 
+add_extension_to_install() {
+    local extension=$1
+
+    # Prevent duplicates
+    if [[ ! " ${EXTENSIONS_TO_INSTALL[@]} " =~ " ${extension} " ]]; then
+        EXTENSIONS_TO_INSTALL+=("${extension}")
+    fi
+}
+
 # Loop through known statically compiled/installed extensions, and enable them.
 # NOTE: when developing on MacOS, remove the quotes while implementing your changes and re-add the quotes afterwards.
 for EXTENSION in "${EXTENSIONS[@]}"; do
-
     # Check if extension is already enabled
     REGULAR_EXPRESSION=\\b${EXTENSION}\\b
     if [[ "${ENABLED_EXTENSIONS}" =~ $REGULAR_EXPRESSION ]]; then
@@ -112,7 +120,32 @@ for EXTENSION in "${EXTENSIONS[@]}"; do
         continue;
     fi
 
-    EXTENSIONS_TO_INSTALL+=("$EXTENSION")
+    if [[ "${EXTENSION}" =~ ^pdo_ ]]; then
+        case "${EXTENSION}" in
+            "pdo_mysql")
+                add_extension_to_install "mysql"
+            ;;
+            "pdo_sqlite")
+                add_extension_to_install "sqlite3"
+            ;;
+            "pdo_pgsql")
+                add_extension_to_install "pgsql"
+            ;;
+            *)
+                echo "Unsupported PDO driver extension \"${EXTENSION}\" cannot is not (yet) supported."
+                echo -n "In case the extension is not available already, please consider using .pre-install.sh to install"
+                echo " the appropriate extension."
+                echo -n "If you think its worth to have the PDO driver extension installed automatically, please create"
+                echo " a feature request on github: https://github.com/laminas/laminas-continuous-integration-action/issues"
+                continue;
+            ;;
+        esac
+
+        add_extension_to_install "pdo"
+        continue;
+    fi
+
+    add_extension_to_install "${EXTENSION}"
 done
 
 # If by now the extensions list is not empty, install missing extensions.
