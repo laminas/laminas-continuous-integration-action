@@ -42,7 +42,7 @@ jobs:
             latest=false
 
       - name: Build image. Push for release
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           context: .
           file: ./Dockerfile

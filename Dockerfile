@@ -2,7 +2,7 @@ ARG NODE_MAJOR=20
 
 # Aliasing base images, so we can change just this, when needing to upgrade or pull base layers
 FROM ubuntu:22.04 AS base-distro
-FROM composer:2.7.1 AS composer
+FROM composer:2.7.7 AS composer
 
 FROM base-distro AS install-markdownlint
 ARG NODE_MAJOR
@@ -151,6 +151,22 @@ RUN set -eux; \
         php8.3-xml \
         php8.3-xsl \
         php8.3-zip \
+        \
+        php8.4-cli \
+        php8.4-bcmath \
+        php8.4-bz2 \
+        php8.4-curl \
+        php8.4-dev \
+        php8.4-fileinfo \
+        php8.4-intl \
+        php8.4-mbstring \
+        php8.4-phar \
+        php8.4-phpdbg \
+        php8.4-readline \
+        php8.4-sockets \
+        php8.4-xml \
+        php8.4-xsl \
+        php8.4-zip \
     && apt autoremove -y \
     && apt clean
 
