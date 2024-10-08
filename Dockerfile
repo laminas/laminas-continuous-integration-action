@@ -88,108 +88,6 @@ RUN set -eux; \
         \
         php-pear \
         \
-        php5.6-bcmath \
-        php5.6-bz2 \
-        php5.6-cli \
-        php5.6-curl \
-        php5.6-dev \
-        php5.6-fileinfo \
-        php5.6-intl \
-        php5.6-json \
-        php5.6-mbstring \
-        php5.6-phar \
-        php5.6-phpdbg \
-        php5.6-readline \
-        php5.6-sockets \
-        php5.6-xml \
-        php5.6-xsl \
-        php5.6-zip \
-        \
-        php7.0-cli \
-        php7.0-bcmath \
-        php7.0-bz2 \
-        php7.0-curl \
-        php7.0-dev \
-        php7.0-fileinfo \
-        php7.0-intl \
-        php7.0-json \
-        php7.0-mbstring \
-        php7.0-phar \
-        php7.0-phpdbg \
-        php7.0-readline \
-        php7.0-sockets \
-        php7.0-xml \
-        php7.0-xsl \
-        php7.0-zip \
-        \
-        php7.1-cli \
-        php7.1-bcmath \
-        php7.1-bz2 \
-        php7.1-curl \
-        php7.1-dev \
-        php7.1-fileinfo \
-        php7.1-intl \
-        php7.1-json \
-        php7.1-mbstring \
-        php7.1-phar \
-        php7.1-phpdbg \
-        php7.1-readline \
-        php7.1-sockets \
-        php7.1-xml \
-        php7.1-xsl \
-        php7.1-zip \
-        \
-        php7.2-cli \
-        php7.2-bcmath \
-        php7.2-bz2 \
-        php7.2-curl \
-        php7.2-dev \
-        php7.2-fileinfo \
-        php7.2-intl \
-        php7.2-json \
-        php7.2-mbstring \
-        php7.2-phar \
-        php7.2-phpdbg \
-        php7.2-readline \
-        php7.2-sockets \
-        php7.2-xml \
-        php7.2-xsl \
-        php7.2-zip \
-        \
-        php7.3-cli \
-        php7.3-bcmath \
-        php7.3-bz2 \
-        php7.3-curl \
-        php7.3-dev \
-        php7.3-fileinfo \
-        php7.3-intl \
-        php7.3-json \
-        php7.3-mbstring \
-        php7.3-phar \
-        php7.3-phpdbg \
-        php7.3-readline \
-        php7.3-sockets \
-        php7.3-xml \
-        php7.3-xsl \
-        php7.3-zip \
-        \
-        php7.4-cli \
-        php7.4-bcmath \
-        php7.4-bz2 \
-        php7.4-curl \
-        php7.4-dev \
-        php7.4-fileinfo \
-        php7.4-intl \
-        php7.4-json \
-        php7.4-mbstring \
-        php7.4-phar \
-        php7.4-phpdbg \
-        php7.4-readline \
-        php7.4-sockets \
-        php7.4-xml \
-        php7.4-xsl \
-        php7.4-zip \
-        \
         php8.0-cli \
         php8.0-bcmath \
         php8.0-bz2 \
@@ -198,8 +96,8 @@ RUN set -eux; \
         php8.0-fileinfo \
         php8.0-intl \
         php8.0-mbstring \
+        php8.0-pcov \
         php8.0-phar \
-        php8.0-phpdbg \
         php8.0-readline \
         php8.0-sockets \
         php8.0-xml \
@@ -214,8 +112,8 @@ RUN set -eux; \
         php8.1-fileinfo \
         php8.1-intl \
         php8.1-mbstring \
+        php8.1-pcov \
         php8.1-phar \
-        php8.1-phpdbg \
         php8.1-readline \
         php8.1-sockets \
         php8.1-xml \
@@ -230,8 +128,8 @@ RUN set -eux; \
         php8.2-fileinfo \
         php8.2-intl \
         php8.2-mbstring \
+        php8.2-pcov \
         php8.2-phar \
-        php8.2-phpdbg \
         php8.2-readline \
         php8.2-sockets \
         php8.2-xml \
@@ -271,6 +169,14 @@ RUN set -eux; \
         php8.4-zip \
     && apt autoremove -y \
     && apt clean
+
+# Temporary fix for https://github.com/laminas/laminas-continuous-integration-action/issues/188
+RUN cp \
+    /usr/share/libtool/build-aux/config.sub \
+    /usr/share/libtool/build-aux/config.guess \
+    /usr/share/libtool/build-aux/ltmain.sh \
+    /usr/bin/shtool \
+    /usr/lib/php/20230831/build
 
 # Build/install static modules that do not have packages
 COPY mods-available /mods-available
@@ -313,7 +219,6 @@ RUN set -eux; \
     && update-alternatives --set php /usr/bin/php$DEFAULT_PHP_VERSION \
     && update-alternatives --set phpize /usr/bin/phpize$DEFAULT_PHP_VERSION \
     && update-alternatives --set php-config /usr/bin/php-config$DEFAULT_PHP_VERSION \
-    && update-alternatives --set phpdbg /usr/bin/phpdbg$DEFAULT_PHP_VERSION \
     && echo "DEFAULT_PHP_VERSION=${DEFAULT_PHP_VERSION}" >> /etc/environment
 
 RUN cd /tools \
