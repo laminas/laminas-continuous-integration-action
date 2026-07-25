@@ -73,7 +73,7 @@ function install_packaged_extensions {
     fi
 
     echo "Installing packaged extensions: ${TO_INSTALL}"
-    apt update
+    apt --allow-releaseinfo-change update
     # shellcheck disable=SC2086,SC2046
     apt install -y ${TO_INSTALL}
 }
